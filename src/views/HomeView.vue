@@ -76,6 +76,14 @@ const faq = ref([
   { title: 'FAQ Four', route: '/faq-four' },
 ]);
 
+const features = ref([
+  { title: 'Features One', route: '/features-one' },
+  { title: 'Features Two', route: '/features-two' },
+  { title: 'Features Three', route: '/features-Three' },
+  { title: 'Features Four', route: '/features-Four' },
+  { title: 'Features Five', route: '/features-Five' },
+]);
+
 // Combine arrays into categories (without pre-computed filteredItems)
 const categories = ref([
   { name: 'Banners Components', items: banners.value },
@@ -84,6 +92,7 @@ const categories = ref([
   { name: 'Content Components', items: content.value },
   { name: 'Call To Action Components', items: callToAction.value },
   { name: 'FAQ Components', items: faq.value },
+  { name: 'Features Components', items: features.value },
 ]);
 
 const searchQuery = ref('');

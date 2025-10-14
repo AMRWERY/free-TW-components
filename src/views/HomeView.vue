@@ -57,11 +57,17 @@ const collections = ref([
   { title: 'Collections Three', route: '/collections-three' },
 ]);
 
+const content = ref([
+  { title: 'Content One', route: '/content-one' },
+  { title: 'Content Two', route: '/content-two' },
+]);
+
 // Combine arrays into categories (without pre-computed filteredItems)
 const categories = ref([
   { name: 'Banners Components', items: banners.value },
   { name: 'Blogs Components', items: blogs.value },
   { name: 'Collections Components', items: collections.value },
+  { name: 'Content Components', items: content.value },
 ]);
 
 const searchQuery = ref('');

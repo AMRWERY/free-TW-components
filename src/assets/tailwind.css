@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .transit {
+    @apply transition duration-300 ease-in-out delay-150 hover:-translate-y-1 hover:scale-110;
+  }
+
+  .warpper {
+    @apply relative inline-block p-1 rounded-lg bg-gradient-to-tr from-indigo-700 via-indigo-500 to-indigo-300;
+  }
+
+  .section-title {
+    @apply bg-[conic-gradient(at_top_left,_var(--tw-gradient-stops))] from-[#4338ca] via-[#6366f1] to-[#a5b4fc] w-fit p-2 rounded-lg mx-auto cursor-pointer px-6 py-3 font-medium text-gray-100 bg-white;
+  }
+}

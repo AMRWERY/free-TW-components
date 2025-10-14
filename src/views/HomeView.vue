@@ -1,0 +1,81 @@
+<template>
+  <div>
+    <div class="max-w-2xl px-4 py-16 mx-auto space-y-10 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+      <!-- search-input component -->
+      <search-input @update:search="handleSearch" />
+
+      <!-- Component Categories -->
+      <div v-for="category in filteredCategories" :key="category.name" class="space-y-6">
+        <div class="flex justify-center">
+          <div class="wrapper">
+            <div class="section-title">
+              <span class="text-3xl font-semibold">{{ category.name }}</span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-1 pb-8 mt-6 border-b border-gray-600 dark:border-gray-100 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+          <div class="relative group transit" v-for="item in getDisplayItems(category)" :key="item.title">
+            <router-link :to="item.route">
+              <div class="w-full h-20 overflow-hidden bg-gray-200 rounded-md group-hover:opacity-75">
+                <div class="flex items-center justify-center h-full">
+                  <p class="text-2xl font-semibold truncate">{{ item.title }}</p>
+                </div>
+              </div>
+            </router-link>
+          </div>
+        </div>
+      </div>
+
+      <!-- Optional: No results message -->
+      <div v-if="searchQuery && filteredCategories.length === 0" class="text-center text-gray-500 py-8">
+        No components found for <span class="underline">"{{ searchQuery }}"</span>.
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { ref, computed } from 'vue';
+import searchInput from '@/components/reusable-components/search-input.vue';
+
+const banners = ref([
+  { title: 'Banner One', route: '/banner-one' },
+  { title: 'Banner Two', route: '/banner-two' },
+]);
+
+const blogs = ref([
+  { title: 'Blogs One', route: '/blogs-one' },
+  { title: 'Blogs Two', route: '/blogs-two' },
+  { title: 'Blogs Three', route: '/blogs-three' },
+  { title: 'Blogs Four', route: '/blogs-four' },
+]);
+
+// Combine arrays into categories (without pre-computed filteredItems)
+const categories = ref([
+  { name: 'Banners Components', items: banners.value },
+  { name: 'Blogs Components', items: blogs.value },
+]);
+
+const searchQuery = ref('');
+
+const getDisplayItems = (category: { name: string; items: { title: string; route: string }[] }) => {
+  if (!searchQuery.value) return category.items;
+  const query = searchQuery.value.toLowerCase();
+  const categoryNameLower = category.name.toLowerCase();
+  if (categoryNameLower.includes(query)) {
+    return category.items;
+  } else {
+    return category.items.filter(item => item.title.toLowerCase().includes(query));
+  }
+};
+
+const filteredCategories = computed(() => {
+  if (!searchQuery.value) return categories.value;
+  return categories.value.filter(category => getDisplayItems(category).length > 0);
+});
+
+const handleSearch = (query: string) => {
+  searchQuery.value = query;
+};
+</script>

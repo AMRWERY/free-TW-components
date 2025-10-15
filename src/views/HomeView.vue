@@ -353,6 +353,12 @@ const productDetails = ref([
   { title: 'Product Details Two', route: '/product-details-two' },
 ]);
 
+const productGrid = ref([
+  { title: 'Product Grid One', route: '/product-grid-one' },
+  { title: 'Product Grid Two', route: '/product-grid-two' },
+  { title: 'Product Grid Three', route: '/product-grid-three' },
+]);
+
 const categories = ref([
   { name: 'Banner Components', items: banners.value },
   { name: 'Blog Components', items: blogs.value },
@@ -373,6 +379,7 @@ const categories = ref([
   { name: 'Newsletter Components', items: newsletter.value },
   { name: 'Pricing Components', items: pricing.value },
   { name: 'Product Details Components', items: productDetails.value },
+  { name: 'Product Grid Components', items: productGrid.value },
 ]);
 
 const searchQuery = ref('');

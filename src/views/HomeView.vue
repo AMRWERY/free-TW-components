@@ -4,33 +4,39 @@
       <!-- search-input component -->
       <search-input @update:search="handleSearch" />
 
-      <!-- Component Categories -->
-      <div v-for="category in filteredCategories" :key="category.name" class="space-y-6">
-        <div class="flex justify-center">
-          <div class="wrapper">
-            <div class="section-title">
-              <span class="text-3xl font-semibold">{{ category.name }}</span>
+      <Transition name="fade">
+        <!-- Component Categories -->
+        <div>
+          <div v-for="category in filteredCategories" :key="category.name" class="space-y-6">
+            <div class="flex justify-center">
+              <div class="wrapper">
+                <div class="section-title">
+                  <span class="text-3xl font-semibold">{{ category.name }}</span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="grid grid-cols-1 pb-8 mt-6 border-b border-gray-600 dark:border-gray-100 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+              <div class="relative group transit" v-for="item in getDisplayItems(category)" :key="item.title">
+                <router-link :to="item.route">
+                  <div class="w-full h-20 overflow-hidden bg-gray-200 rounded-md group-hover:opacity-75">
+                    <div class="flex items-center justify-center h-full">
+                      <p class="text-2xl font-semibold truncate">{{ item.title }}</p>
+                    </div>
+                  </div>
+                </router-link>
+              </div>
             </div>
           </div>
         </div>
-        <div
-          class="grid grid-cols-1 pb-8 mt-6 border-b border-gray-600 dark:border-gray-100 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-          <div class="relative group transit" v-for="item in getDisplayItems(category)" :key="item.title">
-            <router-link :to="item.route">
-              <div class="w-full h-20 overflow-hidden bg-gray-200 rounded-md group-hover:opacity-75">
-                <div class="flex items-center justify-center h-full">
-                  <p class="text-2xl font-semibold truncate">{{ item.title }}</p>
-                </div>
-              </div>
-            </router-link>
-          </div>
-        </div>
-      </div>
+      </Transition>
 
-      <!-- Optional: No results message -->
-      <div v-if="searchQuery && filteredCategories.length === 0" class="text-center text-gray-500 py-8">
-        No components found for <span class="underline">"{{ searchQuery }}"</span>.
-      </div>
+      <Transition name="fade">
+        <!-- Optional: No results message -->
+        <div v-if="searchQuery && filteredCategories.length === 0" class="text-center text-gray-500 py-8">
+          No components found for <span class="underline">"{{ searchQuery }}"</span>.
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -112,6 +118,12 @@ const fullPage = ref([
   { title: 'Full Page Three', route: '/full-page-three' },
 ]);
 
+const gallery = ref([
+  { title: 'Gallery One', route: '/gallery-one' },
+  { title: 'Gallery Two', route: '/gallery-two' },
+  { title: 'Gallery Three', route: '/gallery-three' },
+]);
+
 // Combine arrays into categories (without pre-computed filteredItems)
 const categories = ref([
   { name: 'Banners Components', items: banners.value },
@@ -125,6 +137,7 @@ const categories = ref([
   { name: 'Footer Components', items: footer.value },
   { name: 'Forms Components', items: forms.value },
   { name: 'Full Page Components', items: fullPage.value },
+  { name: 'Gallery Components', items: gallery.value },
 ]);
 
 const searchQuery = ref('');
@@ -149,3 +162,15 @@ const handleSearch = (query: string) => {
   searchQuery.value = query;
 };
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

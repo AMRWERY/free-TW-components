@@ -46,9 +46,9 @@
               <div v-for="category in filteredCategories" :key="category.name" class="space-y-6"
                 :id="category.name.replace(/\s+/g, '-')">
                 <div class="flex justify-center">
-                  <div class="w-full">
+                  <div class="section-title">
                     <div class="text-center">
-                      <span class="text-3xl font-semibold">{{ category.name }}</span>
+                      <span class="text-3xl">{{ category.name }}</span>
                     </div>
                   </div>
                 </div>
@@ -193,6 +193,12 @@ const logoCloud = ref([
   { title: 'Logo Cloud Three', route: '/logo-cloud-three' },
 ]);
 
+const newsletter = ref([
+  { title: 'Newsletter One', route: '/newsletter-one' },
+  { title: 'Newsletter Two', route: '/newsletter-two' },
+  { title: 'Newsletter Three', route: '/newsletter-three' },
+]);
+
 const categories = ref([
   { name: 'Banner Components', items: banners.value },
   { name: 'Blog Components', items: blogs.value },
@@ -210,6 +216,7 @@ const categories = ref([
   { name: 'Heading Components', items: heading.value },
   { name: 'Hero Components', items: hero.value },
   { name: 'Logo Cloud Components', items: logoCloud.value },
+  { name: 'Newsletter Components', items: newsletter.value },
 ]);
 
 const searchQuery = ref('');

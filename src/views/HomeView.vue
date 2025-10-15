@@ -1,35 +1,64 @@
 <template>
   <div>
-    <div class="flex min-h-screen">
+    <div class="flex min-h-screen bg-[#0a0a0f]">
+      <!-- Overlay for small screens when sidebar is open -->
+      <div v-if="sidebarOpen" class="fixed inset-0 bg-black bg-opacity-75 z-30 lg:hidden" @click="sidebarOpen = false">
+      </div>
+
+      <!-- Sidebar Toggle Button (visible on small screens) -->
+      <button @click="sidebarOpen = !sidebarOpen"
+        class="lg:hidden fixed top-4 right-4 z-40 p-2 rounded-md text-cyan-400 bg-[#13131a] border border-gray-800/50 hover:bg-gray-800 transition-colors">
+        <svg v-if="!sidebarOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
       <!-- Sidebar -->
-      <aside
-        class="w-[280px] bg-[#21212c] text-white p-5 shrink-0 sticky top-0 h-screen flex flex-col shadow-[2px_0_5px_rgba(0,0,0,0.2)]">
-        <div class="text-2xl font-semibold mb-5 pb-4 border-b border-[#3a3a4c] capitalize">
-          Collections
+      <aside :class="{
+        'translate-x-0': sidebarOpen,
+        '-translate-x-full': !sidebarOpen,
+        'lg:translate-x-0': true
+      }" class="fixed inset-y-0 left-0 w-[280px] bg-[#13131a] text-white p-5 shrink-0 flex flex-col border-r border-gray-800/50
+         transition-transform duration-300 ease-in-out z-40
+         lg:fixed lg:top-0 lg:bottom-0 lg:block lg:h-screen">
+
+        <div class="text-2xl font-bold mb-5 pb-4 border-b border-gray-800/50 flex-shrink-0">
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Collections</span>
         </div>
 
-        <!-- Filter Input (Fixed at top) -->
-        <div class="relative mb-5">
+        <div class="relative mb-5 group flex-shrink-0">
+          <div
+            class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg opacity-0 group-hover:opacity-30 blur transition duration-300">
+          </div>
           <input type="text" placeholder="Filter ..."
-            class="w-full px-3 py-2 pr-[60px] bg-[#3a3a4c] border border-[#555] rounded-md text-white text-sm placeholder-[#bbb] focus:outline-none focus:ring-2 focus:ring-[#5d5d81]"
+            class="relative w-full px-3 py-2.5 pr-[60px] bg-[#1a1a24] border border-gray-800 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-all"
             v-model="sidebarSearchQuery" @keydown.alt.f.prevent="focusMainSearch" />
-          <span class="absolute right-2.5 top-1/2 -translate-y-1/2 bg-[#555] text-[#eee] px-1.5 py-0.5 rounded text-xs">
+          <span
+            class="absolute right-2.5 top-1/2 -translate-y-1/2 bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded text-xs font-mono border border-cyan-500/30">
             Alt F
           </span>
         </div>
 
-        <!-- Scrollable Menu Area -->
-        <div class="flex-grow overflow-y-auto scrollbar-none">
-          <ul class="list-none p-0 m-0">
+        <!-- Scrollable List Area -->
+        <div class="flex-1 overflow-y-auto scrollbar-none max-h-[calc(100vh-128px)]">
+          <ul class="list-none p-0 m-0 space-y-1">
             <li v-for="category in filteredSidebarCategories" :key="category.name"
-              class="flex justify-between items-center px-2.5 py-3 mb-1.5 rounded-md cursor-pointer transition-all duration-200 text-[0.95rem] font-medium hover:bg-[#3a3a4c] hover:text-white"
-              :class="{ 'bg-[#5d5d81] text-white': activeCategory === category.name }"
+              class="relative flex justify-between items-center px-3 py-3 rounded-lg cursor-pointer transition-all duration-300 text-sm font-medium group"
+              :class="activeCategory === category.name ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' : 'text-gray-400 hover:text-white hover:bg-gray-800/50'"
               @click="scrollToCategory(category.name)">
-              <span class="flex-grow">
+              <div v-if="activeCategory === category.name"
+                class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full">
+              </div>
+              <span class="flex-grow pl-2">
                 {{ category.name.replace(' Components', '') }}
               </span>
-              <span class="px-2 py-0.5 ml-2.5 rounded-xl text-xs"
-                :class="activeCategory === category.name ? 'bg-[#3a3a4c] text-white' : 'bg-[#5d5d81] text-white'">
+              <span class="px-2 py-0.5 ml-2.5 rounded-md text-xs font-mono"
+                :class="activeCategory === category.name ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-gray-800 text-gray-400 group-hover:bg-gray-700'">
                 {{ getDisplayItems(category).length }}
               </span>
             </li>
@@ -38,32 +67,106 @@
       </aside>
 
       <!-- Main Content Area -->
-      <div class="flex-grow pl-5">
-        <div class="max-w-2xl px-4 py-16 mx-auto space-y-10 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+      <div class="flex-grow mt-5 lg:ml-[280px]">
+        <div class="max-w-[1600px] px-6 py-12 mx-auto lg:pl-4 pl-16">
           <Transition name="fade">
             <!-- Component Categories -->
-            <div class="space-y-12">
-              <div v-for="category in filteredCategories" :key="category.name" class="space-y-6"
+            <div class="space-y-24">
+              <div v-for="category in filteredCategories" :key="category.name" class="space-y-8"
                 :id="category.name.replace(/\s+/g, '-')">
-                <div class="flex justify-center">
-                  <div class="section-title">
-                    <div class="text-center">
-                      <span class="text-3xl">{{ category.name }}</span>
+                <!-- Glassmorphism Category Header -->
+                <div class="relative group">
+                  <div
+                    class="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 rounded-2xl opacity-20 blur-xl group-hover:opacity-30 transition duration-500">
+                  </div>
+                  <div class="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 shadow-2xl">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <h2 class="text-4xl font-bold mb-2">
+                          <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
+                            {{ category.name }}
+                          </span>
+                        </h2>
+                        <div class="flex items-center space-x-4 text-sm">
+                          <span class="text-gray-400">{{ getDisplayItems(category).length }} components</span>
+                          <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                          <span class="text-cyan-400 font-mono">Ready to use</span>
+                        </div>
+                      </div>
+                      <div
+                        class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center backdrop-blur-sm">
+                        <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div
-                  class="grid grid-cols-1 pb-8 mt-6 border-b border-gray-600 dark:border-gray-100 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-                  <div class="relative group transition-all duration-200" v-for="item in getDisplayItems(category)"
-                    :key="item.title">
+
+                <!-- Neon Grid Cards -->
+                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  <div class="relative group" v-for="item in getDisplayItems(category)" :key="item.title">
+                    <div
+                      class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl opacity-0 group-hover:opacity-50 blur transition duration-500">
+                    </div>
                     <router-link :to="item.route">
                       <div
-                        class="w-full h-20 overflow-hidden bg-gray-200 rounded-md group-hover:opacity-75 transition-opacity">
-                        <div class="flex items-center justify-center h-full">
-                          <p class="text-2xl font-semibold truncate px-4">{{ item.title }}</p>
+                        class="relative h-40 overflow-hidden rounded-xl bg-[#13131a] border border-gray-800 group-hover:border-cyan-500/50 transition-all duration-500">
+                        <!-- Grid Pattern Background -->
+                        <div class="absolute inset-0 opacity-10">
+                          <div class="absolute inset-0"
+                            style="background-image: linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px); background-size: 20px 20px;">
+                          </div>
+                        </div>
+
+                        <!-- Hover Gradient Overlay -->
+                        <div
+                          class="absolute inset-0 bg-gradient-to-br from-cyan-500/0 via-blue-500/0 to-purple-500/0 group-hover:from-cyan-500/10 group-hover:via-blue-500/10 group-hover:to-purple-500/10 transition-all duration-500">
+                        </div>
+
+                        <!-- Content -->
+                        <div class="relative h-full p-5 flex flex-col justify-between">
+                          <div class="flex items-start justify-between">
+                            <div
+                              class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+                              <span class="text-cyan-400 font-mono text-sm font-bold">
+                                {{ item.title.match(/\d+/)?.[0] || '#' }}
+                              </span>
+                            </div>
+                            <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                              </svg>
+                            </div>
+                          </div>
+
+                          <div>
+                            <h3
+                              class="text-lg font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors duration-300">
+                              {{ item.title }}
+                            </h3>
+                            <p class="text-xs text-gray-500 font-mono">Click to preview</p>
+                          </div>
+                        </div>
+
+                        <!-- Bottom Neon Line -->
+                        <div
+                          class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left">
                         </div>
                       </div>
                     </router-link>
+                  </div>
+                </div>
+
+                <!-- Minimal Divider -->
+                <div class="flex items-center justify-center pt-12">
+                  <div class="flex items-center space-x-4">
+                    <div class="w-32 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
+                    <div class="w-2 h-2 rounded-full bg-cyan-500/50"></div>
+                    <div class="w-32 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
                   </div>
                 </div>
               </div>
@@ -71,10 +174,49 @@
           </Transition>
 
           <Transition name="fade">
-            <!-- No results message -->
+            <!-- Cyberpunk No Results -->
             <div v-if="searchQuery && filteredCategories.length === 0"
-              class="text-center text-gray-500 py-8 text-3xl font-semibold">
-              No Components found for <span class="underline">"{{ searchQuery }}"</span>. 😁
+              class="flex flex-col items-center justify-center py-32">
+              <div class="relative">
+                <!-- Animated Rings -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="w-48 h-48 rounded-full border-2 border-cyan-500/20 animate-ping-slow"></div>
+                  <div class="absolute w-40 h-40 rounded-full border-2 border-blue-500/20 animate-ping-slower"></div>
+                </div>
+
+                <!-- Center Icon -->
+                <div
+                  class="relative w-32 h-32 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 flex items-center justify-center backdrop-blur-sm">
+                  <svg class="w-16 h-16 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+              </div>
+
+              <h3 class="text-3xl font-bold mb-3">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
+                  No Components Found
+                </span>
+              </h3>
+
+              <p class="text-gray-400 mb-2 text-center max-w-md">
+                No matches for
+                <span class="font-mono text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-lg border border-cyan-500/30">{{
+                  searchQuery }}</span>
+              </p>
+
+              <p class="text-gray-600 text-sm mb-8">Try different keywords or clear your search</p>
+
+              <button @click="searchQuery = ''" class="relative group">
+                <div
+                  class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg opacity-50 group-hover:opacity-100 blur transition duration-300">
+                </div>
+                <div
+                  class="relative px-8 py-3 bg-[#13131a] rounded-lg font-semibold text-cyan-400 border border-cyan-500/30 group-hover:text-white transition-colors">
+                  Clear Search
+                </div>
+              </button>
             </div>
           </Transition>
         </div>
@@ -149,7 +291,7 @@ const footer = ref([
 ]);
 
 const forms = ref([
-  { title: 'Contat Form One', route: '/contact-form-one' },
+  { title: 'Contact Form One', route: '/contact-form-one' },
   { title: 'Auth Form One', route: '/auth-form-one' },
 ]);
 
@@ -228,6 +370,7 @@ const categories = ref([
 ]);
 
 const searchQuery = ref('');
+const sidebarOpen = ref(false);
 
 const getDisplayItems = (category: { name: string; items: { title: string; route: string }[] }) => {
   if (!searchQuery.value) return category.items;
@@ -267,6 +410,10 @@ const scrollToCategory = (categoryName: string) => {
   if (element) {
     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     activeCategory.value = categoryName;
+    // Close sidebar on small screens (below lg: breakpoint, 1024px)
+    if (window.innerWidth < 1024) {
+      sidebarOpen.value = false;
+    }
   }
 };
 
@@ -274,7 +421,7 @@ const handleScroll = () => {
   let found = false;
   for (let i = filteredCategories.value.length - 1; i >= 0; i--) {
     const category = filteredCategories.value[i];
-    if (!category) continue; // Fix: Add null check
+    if (!category) continue;
     const id = category.name.replace(/\s+/g, '-');
     const element = document.getElementById(id);
     if (element) {
@@ -301,6 +448,20 @@ onMounted(() => {
   window.addEventListener('scroll', handleScroll);
 });
 
+onMounted(() => {
+  const handleResize = () => {
+    if (window.innerWidth >= 1024) {
+      sidebarOpen.value = false;
+    }
+  };
+  window.addEventListener('resize', handleResize);
+  // Also add initial check
+  handleResize(); // Check on mount
+  onBeforeUnmount(() => {
+    window.removeEventListener('resize', handleResize);
+  });
+});
+
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
 });
@@ -318,11 +479,53 @@ onBeforeUnmount(() => {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.25s;
+  transition: opacity 0.3s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+@keyframes ping-slow {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.4;
+  }
+
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes ping-slower {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1.15);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+.animate-ping-slow {
+  animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-ping-slower {
+  animation: ping-slower 4s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 </style>

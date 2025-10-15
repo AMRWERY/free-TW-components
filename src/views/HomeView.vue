@@ -199,6 +199,13 @@ const newsletter = ref([
   { title: 'Newsletter Three', route: '/newsletter-three' },
 ]);
 
+const pricing = ref([
+  { title: 'Pricing One', route: '/pricing-one' },
+  { title: 'Pricing Two', route: '/pricing-two' },
+  { title: 'Pricing Three', route: '/pricing-three' },
+  { title: 'Pricing Four', route: '/pricing-four' },
+]);
+
 const categories = ref([
   { name: 'Banner Components', items: banners.value },
   { name: 'Blog Components', items: blogs.value },
@@ -217,6 +224,7 @@ const categories = ref([
   { name: 'Hero Components', items: hero.value },
   { name: 'Logo Cloud Components', items: logoCloud.value },
   { name: 'Newsletter Components', items: newsletter.value },
+  { name: 'Pricing Components', items: pricing.value },
 ]);
 
 const searchQuery = ref('');

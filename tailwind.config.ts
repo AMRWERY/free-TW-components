@@ -58,6 +58,5 @@ export default {
     require("@tailwindcss/typography"),
     require("@tailwindcss/aspect-ratio"),
     require("@tailwindcss/container-queries"),
-    require("tailwindcss-rtl"),
   ],
 } satisfies Config;

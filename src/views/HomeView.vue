@@ -90,6 +90,17 @@ const floatingNavigation = ref([
   { title: 'Floating Navigation Three', route: '/floating-navigation-three' },
 ]);
 
+const footer = ref([
+  { title: 'Footer One', route: '/footer-one' },
+  { title: 'Footer Two', route: '/footer-two' },
+  { title: 'Footer Three', route: '/footer-three' },
+  { title: 'Footer Four', route: '/footer-four' },
+  { title: 'Footer Five', route: '/footer-five' },
+  { title: 'Footer Six', route: '/footer-six' },
+  { title: 'Footer Seven', route: '/footer-seven' },
+  { title: 'Footer Eight', route: '/footer-eight' },
+]);
+
 // Combine arrays into categories (without pre-computed filteredItems)
 const categories = ref([
   { name: 'Banners Components', items: banners.value },
@@ -100,6 +111,7 @@ const categories = ref([
   { name: 'FAQ Components', items: faq.value },
   { name: 'Features Components', items: features.value },
   { name: 'Floating Navigation Components', items: floatingNavigation.value },
+  { name: 'Footer Components', items: footer.value },
 ]);
 
 const searchQuery = ref('');

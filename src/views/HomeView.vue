@@ -33,8 +33,9 @@
 
       <Transition name="fade">
         <!-- Optional: No results message -->
-        <div v-if="searchQuery && filteredCategories.length === 0" class="text-center text-gray-500 py-8">
-          No components found for <span class="underline">"{{ searchQuery }}"</span>.
+        <div v-if="searchQuery && filteredCategories.length === 0"
+          class="text-center text-gray-500 py-8 text-3xl font-semibold">
+          No Components found for <span class="underline">"{{ searchQuery }}"</span>. 😁
         </div>
       </Transition>
     </div>
@@ -135,6 +136,17 @@ const heading = ref([
   { title: 'Heading Three', route: '/heading-three' },
 ]);
 
+const hero = ref([
+  { title: 'Hero One', route: '/hero-one' },
+  { title: 'Hero Two', route: '/hero-two' },
+  { title: 'Hero Three', route: '/hero-three' },
+  { title: 'Hero Four', route: '/hero-four' },
+  { title: 'Hero Five', route: '/hero-five' },
+  { title: 'Hero Six', route: '/hero-six' },
+  { title: 'Hero Seven', route: '/hero-seven' },
+  { title: 'Hero Eight', route: '/hero-eight' },
+]);
+
 // Combine arrays into categories (without pre-computed filteredItems)
 const categories = ref([
   { name: 'Banners Components', items: banners.value },
@@ -151,6 +163,7 @@ const categories = ref([
   { name: 'Gallery Components', items: gallery.value },
   { name: 'Header Components', items: header.value },
   { name: 'Heading Components', items: heading.value },
+  { name: 'Hero Components', items: hero.value },
 ]);
 
 const searchQuery = ref('');

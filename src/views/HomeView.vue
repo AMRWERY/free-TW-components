@@ -46,7 +46,7 @@
 
         <!-- Scrollable List Area -->
         <div class="flex-1 overflow-y-auto scrollbar-none max-h-[calc(100vh-128px)]">
-          <ul class="list-none p-0 m-0 space-y-1">
+          <ul class="list-none p-0 pb-12 m-0 space-y-1">
             <li v-for="category in filteredSidebarCategories" :key="category.name"
               class="relative flex justify-between items-center px-3 py-3 rounded-lg cursor-pointer transition-all duration-300 text-sm font-medium group"
               :class="activeCategory === category.name ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' : 'text-gray-400 hover:text-white hover:bg-gray-800/50'"
@@ -348,6 +348,11 @@ const pricing = ref([
   { title: 'Pricing Four', route: '/pricing-four' },
 ]);
 
+const productDetails = ref([
+  { title: 'Product Details One', route: '/product-details-one' },
+  { title: 'Product Details Two', route: '/product-details-two' },
+]);
+
 const categories = ref([
   { name: 'Banner Components', items: banners.value },
   { name: 'Blog Components', items: blogs.value },
@@ -367,6 +372,7 @@ const categories = ref([
   { name: 'Logo Cloud Components', items: logoCloud.value },
   { name: 'Newsletter Components', items: newsletter.value },
   { name: 'Pricing Components', items: pricing.value },
+  { name: 'Product Details Components', items: productDetails.value },
 ]);
 
 const searchQuery = ref('');

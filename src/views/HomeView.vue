@@ -14,7 +14,7 @@
           </div>
         </div>
         <div
-          class="grid grid-cols-1 pb-8 mt-6 border-b border-gray-600 dark:border-gray-100 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+          class="grid grid-cols-1 pb-8 mt-6 border-b border-gray-600 dark:border-gray-100 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
           <div class="relative group transit" v-for="item in getDisplayItems(category)" :key="item.title">
             <router-link :to="item.route">
               <div class="w-full h-20 overflow-hidden bg-gray-200 rounded-md group-hover:opacity-75">
@@ -84,6 +84,12 @@ const features = ref([
   { title: 'Features Five', route: '/features-Five' },
 ]);
 
+const floatingNavigation = ref([
+  { title: 'Floating Navigation One', route: '/floating-navigation-one' },
+  { title: 'Floating Navigation Two', route: '/floating-navigation-two' },
+  { title: 'Floating Navigation Three', route: '/floating-navigation-three' },
+]);
+
 // Combine arrays into categories (without pre-computed filteredItems)
 const categories = ref([
   { name: 'Banners Components', items: banners.value },
@@ -93,6 +99,7 @@ const categories = ref([
   { name: 'Call To Action Components', items: callToAction.value },
   { name: 'FAQ Components', items: faq.value },
   { name: 'Features Components', items: features.value },
+  { name: 'Floating Navigation Components', items: floatingNavigation.value },
 ]);
 
 const searchQuery = ref('');

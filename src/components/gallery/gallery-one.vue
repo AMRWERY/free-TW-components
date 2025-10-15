@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="p-8">
+        <div class="p-8 bg-[#0a0a0f] min-h-screen">
             <div class="flex justify-end gap-2 mb-4">
                 <button @click="showPreview = true; showCode = false"
                     class="p-2 rounded-md transition-colors duration-200" :class="{

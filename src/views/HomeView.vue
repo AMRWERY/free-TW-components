@@ -106,6 +106,12 @@ const forms = ref([
   { title: 'Auth Form One', route: '/auth-form-one' },
 ]);
 
+const fullPage = ref([
+  { title: 'Full Page One', route: '/full-page-one' },
+  { title: 'Full Page Two', route: '/full-page-two' },
+  { title: 'Full Page Three', route: '/full-page-three' },
+]);
+
 // Combine arrays into categories (without pre-computed filteredItems)
 const categories = ref([
   { name: 'Banners Components', items: banners.value },
@@ -118,6 +124,7 @@ const categories = ref([
   { name: 'Floating Navigation Components', items: floatingNavigation.value },
   { name: 'Footer Components', items: footer.value },
   { name: 'Forms Components', items: forms.value },
+  { name: 'Full Page Components', items: fullPage.value },
 ]);
 
 const searchQuery = ref('');

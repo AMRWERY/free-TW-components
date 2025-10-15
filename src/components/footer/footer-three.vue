@@ -28,7 +28,7 @@
                                 class="grid grid-cols-2 gap-12 border-t pt-10 md:grid-cols-4 lg:grid-cols-6 lg:gap-8 lg:pt-12">
                                 <div class="col-span-full lg:col-span-2">
                                     <div class="mb-4 lg:-mt-2">
-                                        <a href="/"
+                                        <a href="#"
                                             class="inline-flex items-center gap-2 text-xl font-bold text-black md:text-2xl"
                                             aria-label="logo">
                                             <svg width="95" height="94" viewBox="0 0 95 94"
@@ -228,7 +228,7 @@ const componentCode = ref(`
                                 class="grid grid-cols-2 gap-12 border-t pt-10 md:grid-cols-4 lg:grid-cols-6 lg:gap-8 lg:pt-12">
                                 <div class="col-span-full lg:col-span-2">
                                     <div class="mb-4 lg:-mt-2">
-                                        <a href="/"
+                                        <a href="#"
                                             class="inline-flex items-center gap-2 text-xl font-bold text-black md:text-2xl"
                                             aria-label="logo">
                                             <svg width="95" height="94" viewBox="0 0 95 94"

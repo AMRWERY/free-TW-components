@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="grid gap-6 sm:grid-cols-2">
-                            <router-link to=""
+                            <a href="#"
                                 class="group relative flex h-80 items-end overflow-hidden rounded-lg bg-gray-100 p-4 shadow-lg">
                                 <img src="https://images.unsplash.com/photo-1620243318482-fdd2affd7a38?auto=format&q=75&fit=crop&w=750"
                                     loading="lazy" alt="Photo by Fakurian Design"
@@ -44,9 +44,9 @@
                                     <span class="text-gray-300">Home</span>
                                     <span class="text-lg font-semibold text-white lg:text-xl">Decoration</span>
                                 </div>
-                            </router-link>
+                            </a>
 
-                            <router-link to=""
+                            <a href="#"
                                 class="group relative flex h-80 items-end overflow-hidden rounded-lg bg-gray-100 p-4 shadow-lg">
                                 <img src="https://images.unsplash.com/photo-1620241608701-94ef138c7ec9?auto=format&q=75&fit=crop&w=750"
                                     loading="lazy" alt="Photo by Fakurian Design"
@@ -58,7 +58,7 @@
                                     <span class="text-gray-300">Modern</span>
                                     <span class="text-lg font-semibold text-white lg:text-xl">Furniture</span>
                                 </div>
-                            </router-link>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -113,7 +113,7 @@ const componentCode = ref(`
                         </div>
 
                         <div class="grid gap-6 sm:grid-cols-2">
-                            <router-link to=""
+                            <a href="#"
                                 class="group relative flex h-80 items-end overflow-hidden rounded-lg bg-gray-100 p-4 shadow-lg">
                                 <img src="https://images.unsplash.com/photo-1620243318482-fdd2affd7a38?auto=format&q=75&fit=crop&w=750"
                                     loading="lazy" alt="Photo by Fakurian Design"
@@ -125,9 +125,9 @@ const componentCode = ref(`
                                     <span class="text-gray-300">Home</span>
                                     <span class="text-lg font-semibold text-white lg:text-xl">Decoration</span>
                                 </div>
-                            </router-link>
+                            </a>
 
-                            <router-link to=""
+                            <a href="#"
                                 class="group relative flex h-80 items-end overflow-hidden rounded-lg bg-gray-100 p-4 shadow-lg">
                                 <img src="https://images.unsplash.com/photo-1620241608701-94ef138c7ec9?auto=format&q=75&fit=crop&w=750"
                                     loading="lazy" alt="Photo by Fakurian Design"
@@ -139,7 +139,7 @@ const componentCode = ref(`
                                     <span class="text-gray-300">Modern</span>
                                     <span class="text-lg font-semibold text-white lg:text-xl">Furniture</span>
                                 </div>
-                            </router-link>
+                            </a>
                         </div>
                     </div>
                 </div>

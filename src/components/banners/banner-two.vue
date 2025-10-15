@@ -29,9 +29,9 @@
                                 class="order-1 mb-2 inline-block w-11/12 max-w-screen-sm text-sm text-white sm:order-none sm:mb-0 sm:w-auto md:text-base">
                                 This is a section of some simple filler text, also known as placeholder text.</div>
 
-                            <router-link to=""
+                            <a href="#"
                                 class="order-last inline-block w-full whitespace-nowrap rounded-lg bg-indigo-600 px-4 py-2 text-center text-xs font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-700 focus-visible:ring active:bg-indigo-800 sm:order-none sm:w-auto md:text-sm">Learn
-                                more</router-link>
+                                more</a>
                             <div
                                 class="order-2 flex w-1/12 items-start justify-end sm:absolute sm:right-0 sm:order-none sm:mr-2 sm:w-auto xl:mr-3">
                                 <button type="button"
@@ -93,9 +93,9 @@ const componentCode = ref(`<div class="bg-white pt-6 sm:pt-8 lg:pt-12">
                         class="order-1 mb-2 inline-block w-11/12 max-w-screen-sm text-sm text-white sm:order-none sm:mb-0 sm:w-auto md:text-base">
                         This is a section of some simple filler text, also known as placeholder text.</div>
 
-                    <router-link to=""
+                    <a href="#"
                         class="order-last inline-block w-full whitespace-nowrap rounded-lg bg-indigo-600 px-4 py-2 text-center text-xs font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-700 focus-visible:ring active:bg-indigo-800 sm:order-none sm:w-auto md:text-sm">Learn
-                        more</router-link>
+                        more</a>
                     <div
                         class="order-2 flex w-1/12 items-start justify-end sm:absolute sm:right-0 sm:order-none sm:mr-2 sm:w-auto xl:mr-3">
                         <button type="button"

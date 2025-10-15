@@ -33,7 +33,7 @@
                         </div>
 
                         <div class="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-8">
-                            <router-link to=""
+                            <a href="#"
                                 class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64 xl:h-96">
                                 <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&q=75&fit=crop&w=600"
                                     loading="lazy" alt="Photo by Minh Pham"
@@ -49,9 +49,9 @@
 
                                     <span class="font-semibold text-indigo-300">Read more</span>
                                 </div>
-                            </router-link>
+                            </a>
 
-                            <router-link to=""
+                            <a href="#"
                                 class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64 xl:h-96">
                                 <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&q=75&fit=crop&w=600"
                                     loading="lazy" alt="Photo by Lorenzo Herrera"
@@ -66,9 +66,9 @@
                                         legacy stacks</h2>
                                     <span class="font-semibold text-indigo-300">Read more</span>
                                 </div>
-                            </router-link>
+                            </a>
 
-                            <router-link to=""
+                            <a href="#"
                                 class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64 xl:h-96">
                                 <img src="https://images.unsplash.com/photo-1542759564-7ccbb6ac450a?auto=format&q=75&fit=crop&w=600"
                                     loading="lazy" alt="Photo by Magicle"
@@ -82,9 +82,9 @@
                                         smartphones for devs</h2>
                                     <span class="font-semibold text-indigo-300">Read more</span>
                                 </div>
-                            </router-link>
+                            </a>
 
-                            <router-link to=""
+                            <a href="#"
                                 class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64 xl:h-96">
                                 <img src="https://images.unsplash.com/photo-1610465299996-30f240ac2b1c?auto=format&q=75&fit=crop&w=600"
                                     loading="lazy" alt="Photo by Martin Sanchez"
@@ -100,7 +100,7 @@
 
                                     <span class="font-semibold text-indigo-300">Read more</span>
                                 </div>
-                            </router-link>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -154,7 +154,7 @@ const componentCode = ref(`
                 </div>
 
                 <div class="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-8">
-                    <router-link to=""
+                    <a href="#"
                         class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64 xl:h-96">
                         <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&q=75&fit=crop&w=600"
                             loading="lazy" alt="Photo by Minh Pham"
@@ -169,9 +169,9 @@ const componentCode = ref(`
 
                             <span class="font-semibold text-indigo-300">Read more</span>
                         </div>
-                    </router-link>
+                    </a>
 
-                    <router-link to=""
+                    <a href="#"
                         class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64 xl:h-96">
                         <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&q=75&fit=crop&w=600"
                             loading="lazy" alt="Photo by Lorenzo Herrera"
@@ -185,9 +185,9 @@ const componentCode = ref(`
                                 legacy stacks</h2>
                             <span class="font-semibold text-indigo-300">Read more</span>
                         </div>
-                    </router-link>
+                    </a>
 
-                    <router-link to=""
+                    <a href="#"
                         class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64 xl:h-96">
                         <img src="https://images.unsplash.com/photo-1542759564-7ccbb6ac450a?auto=format&q=75&fit=crop&w=600"
                             loading="lazy" alt="Photo by Magicle"
@@ -201,9 +201,9 @@ const componentCode = ref(`
                                 smartphones for devs</h2>
                             <span class="font-semibold text-indigo-300">Read more</span>
                         </div>
-                    </router-link>
+                    </a>
 
-                    <router-link to=""
+                    <a href="#"
                         class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64 xl:h-96">
                         <img src="https://images.unsplash.com/photo-1610465299996-30f240ac2b1c?auto=format&q=75&fit=crop&w=600"
                             loading="lazy" alt="Photo by Martin Sanchez"
@@ -218,7 +218,7 @@ const componentCode = ref(`
 
                             <span class="font-semibold text-indigo-300">Read more</span>
                         </div>
-                    </router-link>
+                    </a>
                 </div>
             </div>
         </div>

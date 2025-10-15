@@ -101,6 +101,11 @@ const footer = ref([
   { title: 'Footer Eight', route: '/footer-eight' },
 ]);
 
+const forms = ref([
+  { title: 'Contat Form One', route: '/contact-form-one' },
+  { title: 'Auth Form One', route: '/auth-form-one' },
+]);
+
 // Combine arrays into categories (without pre-computed filteredItems)
 const categories = ref([
   { name: 'Banners Components', items: banners.value },
@@ -112,6 +117,7 @@ const categories = ref([
   { name: 'Features Components', items: features.value },
   { name: 'Floating Navigation Components', items: floatingNavigation.value },
   { name: 'Footer Components', items: footer.value },
+  { name: 'Forms Components', items: forms.value },
 ]);
 
 const searchQuery = ref('');

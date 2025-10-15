@@ -129,6 +129,12 @@ const header = ref([
   { title: 'Header Two', route: '/header-two' },
 ]);
 
+const heading = ref([
+  { title: 'Heading One', route: '/heading-one' },
+  { title: 'Heading Two', route: '/heading-two' },
+  { title: 'Heading Three', route: '/heading-three' },
+]);
+
 // Combine arrays into categories (without pre-computed filteredItems)
 const categories = ref([
   { name: 'Banners Components', items: banners.value },
@@ -144,6 +150,7 @@ const categories = ref([
   { name: 'Full Page Components', items: fullPage.value },
   { name: 'Gallery Components', items: gallery.value },
   { name: 'Header Components', items: header.value },
+  { name: 'Heading Components', items: heading.value },
 ]);
 
 const searchQuery = ref('');

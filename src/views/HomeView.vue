@@ -147,6 +147,12 @@ const hero = ref([
   { title: 'Hero Eight', route: '/hero-eight' },
 ]);
 
+const logoCloud = ref([
+  { title: 'Logo Cloud One', route: '/logo-cloud-one' },
+  { title: 'Logo Cloud Two', route: '/logo-cloud-two' },
+  { title: 'Logo Cloud Three', route: '/logo-cloud-three' },
+]);
+
 // Combine arrays into categories (without pre-computed filteredItems)
 const categories = ref([
   { name: 'Banners Components', items: banners.value },
@@ -164,6 +170,7 @@ const categories = ref([
   { name: 'Header Components', items: header.value },
   { name: 'Heading Components', items: heading.value },
   { name: 'Hero Components', items: hero.value },
+  { name: 'Logo Cloud Components', items: logoCloud.value },
 ]);
 
 const searchQuery = ref('');

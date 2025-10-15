@@ -124,6 +124,11 @@ const gallery = ref([
   { title: 'Gallery Three', route: '/gallery-three' },
 ]);
 
+const header = ref([
+  { title: 'Header One', route: '/header-one' },
+  { title: 'Header Two', route: '/header-two' },
+]);
+
 // Combine arrays into categories (without pre-computed filteredItems)
 const categories = ref([
   { name: 'Banners Components', items: banners.value },
@@ -138,6 +143,7 @@ const categories = ref([
   { name: 'Forms Components', items: forms.value },
   { name: 'Full Page Components', items: fullPage.value },
   { name: 'Gallery Components', items: gallery.value },
+  { name: 'Header Components', items: header.value },
 ]);
 
 const searchQuery = ref('');

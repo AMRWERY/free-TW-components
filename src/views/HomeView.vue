@@ -54,7 +54,7 @@
               <div v-if="activeCategory === category.name"
                 class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full">
               </div>
-              <span class="flex-grow pl-2">
+              <span class="flex-grow pl-2 capitalize">
                 {{ category.name.replace(' Components', '') }}
               </span>
               <span class="px-2 py-0.5 ml-2.5 rounded-md text-xs font-mono"
@@ -84,7 +84,7 @@
                       <div>
                         <h2 class="text-4xl font-bold mb-2">
                           <span
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 capitalize">
                             {{ category.name }}
                           </span>
                         </h2>
@@ -111,7 +111,7 @@
                     <div
                       class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl opacity-0 group-hover:opacity-50 blur transition duration-500">
                     </div>
-                    <router-link :to="item.route">
+                    <router-link :to="`/${item.route}`">
                       <div
                         class="relative h-40 overflow-hidden rounded-xl bg-[#13131a] border border-gray-800 group-hover:border-cyan-500/50 transition-all duration-500">
                         <!-- Grid Pattern Background -->
@@ -132,7 +132,7 @@
                             <div
                               class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
                               <span class="text-cyan-400 font-mono text-sm font-bold">
-                                {{ item.title.match(/\d+/)?.[0] || '#' }}
+                                {{ item.title?.match(/\d+/)?.[0] || '#' }}
                               </span>
                             </div>
                             <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -227,172 +227,28 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { useComponentsStore } from '@/stores/componentsStore'
 
-const banners = ref([
-  { title: 'Banner One', route: '/banner-one' },
-  { title: 'Banner Two', route: '/banner-two' },
-]);
+const componentsStore = useComponentsStore()
 
-const blogs = ref([
-  { title: 'Blogs One', route: '/blogs-one' },
-  { title: 'Blogs Two', route: '/blogs-two' },
-  { title: 'Blogs Three', route: '/blogs-three' },
-  { title: 'Blogs Four', route: '/blogs-four' },
-]);
+onMounted(() => {
+  componentsStore.fetchComponents()
+})
 
-const collections = ref([
-  { title: 'Collections One', route: '/collections-one' },
-  { title: 'Collections Two', route: '/collections-two' },
-  { title: 'Collections Three', route: '/collections-three' },
-]);
-
-const content = ref([
-  { title: 'Content One', route: '/content-one' },
-  { title: 'Content Two', route: '/content-two' },
-]);
-
-const callToAction = ref([
-  { title: 'Call To Action One', route: '/call-to-action-one' },
-  { title: 'Call To Action Two', route: '/call-to-action-two' },
-  { title: 'Call To Action Three', route: '/call-to-action-three' },
-  { title: 'Call To Action Four', route: '/call-to-action-four' },
-]);
-
-const faq = ref([
-  { title: 'FAQ One', route: '/faq-one' },
-  { title: 'FAQ Two', route: '/faq-two' },
-  { title: 'FAQ Three', route: '/faq-three' },
-  { title: 'FAQ Four', route: '/faq-four' },
-]);
-
-const features = ref([
-  { title: 'Features One', route: '/features-one' },
-  { title: 'Features Two', route: '/features-two' },
-  { title: 'Features Three', route: '/features-Three' },
-  { title: 'Features Four', route: '/features-Four' },
-  { title: 'Features Five', route: '/features-Five' },
-]);
-
-const floatingNavigation = ref([
-  { title: 'Floating Navigation One', route: '/floating-navigation-one' },
-  { title: 'Floating Navigation Two', route: '/floating-navigation-two' },
-  { title: 'Floating Navigation Three', route: '/floating-navigation-three' },
-]);
-
-const footer = ref([
-  { title: 'Footer One', route: '/footer-one' },
-  { title: 'Footer Two', route: '/footer-two' },
-  { title: 'Footer Three', route: '/footer-three' },
-  { title: 'Footer Four', route: '/footer-four' },
-  { title: 'Footer Five', route: '/footer-five' },
-  { title: 'Footer Six', route: '/footer-six' },
-  { title: 'Footer Seven', route: '/footer-seven' },
-  { title: 'Footer Eight', route: '/footer-eight' },
-]);
-
-const forms = ref([
-  { title: 'Contact Form One', route: '/contact-form-one' },
-  { title: 'Auth Form One', route: '/auth-form-one' },
-]);
-
-const fullPage = ref([
-  { title: 'Full Page One', route: '/full-page-one' },
-  { title: 'Full Page Two', route: '/full-page-two' },
-  { title: 'Full Page Three', route: '/full-page-three' },
-]);
-
-const gallery = ref([
-  { title: 'Gallery One', route: '/gallery-one' },
-  { title: 'Gallery Two', route: '/gallery-two' },
-  { title: 'Gallery Three', route: '/gallery-three' },
-]);
-
-const header = ref([
-  { title: 'Header One', route: '/header-one' },
-  { title: 'Header Two', route: '/header-two' },
-]);
-
-const heading = ref([
-  { title: 'Heading One', route: '/heading-one' },
-  { title: 'Heading Two', route: '/heading-two' },
-  { title: 'Heading Three', route: '/heading-three' },
-]);
-
-const hero = ref([
-  { title: 'Hero One', route: '/hero-one' },
-  { title: 'Hero Two', route: '/hero-two' },
-  { title: 'Hero Three', route: '/hero-three' },
-  { title: 'Hero Four', route: '/hero-four' },
-  { title: 'Hero Five', route: '/hero-five' },
-  { title: 'Hero Six', route: '/hero-six' },
-  { title: 'Hero Seven', route: '/hero-seven' },
-  { title: 'Hero Eight', route: '/hero-eight' },
-]);
-
-const logoCloud = ref([
-  { title: 'Logo Cloud One', route: '/logo-cloud-one' },
-  { title: 'Logo Cloud Two', route: '/logo-cloud-two' },
-  { title: 'Logo Cloud Three', route: '/logo-cloud-three' },
-]);
-
-const newsletter = ref([
-  { title: 'Newsletter One', route: '/newsletter-one' },
-  { title: 'Newsletter Two', route: '/newsletter-two' },
-  { title: 'Newsletter Three', route: '/newsletter-three' },
-]);
-
-const pricing = ref([
-  { title: 'Pricing One', route: '/pricing-one' },
-  { title: 'Pricing Two', route: '/pricing-two' },
-  { title: 'Pricing Three', route: '/pricing-three' },
-  { title: 'Pricing Four', route: '/pricing-four' },
-]);
-
-const productDetails = ref([
-  { title: 'Product Details One', route: '/product-details-one' },
-  { title: 'Product Details Two', route: '/product-details-two' },
-]);
-
-const productGrid = ref([
-  { title: 'Product Grid One', route: '/product-grid-one' },
-  { title: 'Product Grid Two', route: '/product-grid-two' },
-  { title: 'Product Grid Three', route: '/product-grid-three' },
-]);
-
-const categories = ref([
-  { name: 'Banner Components', items: banners.value },
-  { name: 'Blog Components', items: blogs.value },
-  { name: 'Collections Components', items: collections.value },
-  { name: 'Content Components', items: content.value },
-  { name: 'Call to Action Components', items: callToAction.value },
-  { name: 'FAQ Components', items: faq.value },
-  { name: 'Features Components', items: features.value },
-  { name: 'Floating Navigation Components', items: floatingNavigation.value },
-  { name: 'Footer Components', items: footer.value },
-  { name: 'Form Components', items: forms.value },
-  { name: 'Full Page Components', items: fullPage.value },
-  { name: 'Gallery Components', items: gallery.value },
-  { name: 'Header Components', items: header.value },
-  { name: 'Heading Components', items: heading.value },
-  { name: 'Hero Components', items: hero.value },
-  { name: 'Logo Cloud Components', items: logoCloud.value },
-  { name: 'Newsletter Components', items: newsletter.value },
-  { name: 'Pricing Components', items: pricing.value },
-  { name: 'Product Details Components', items: productDetails.value },
-  { name: 'Product Grid Components', items: productGrid.value },
-]);
+const categories = computed(() => componentsStore.categories)
 
 const searchQuery = ref('');
 const sidebarOpen = ref(false);
 
-const getDisplayItems = (category: { name: string; items: { title: string; route: string }[] }) => {
-  if (!searchQuery.value) return category.items;
+const getDisplayItems = (category: { name: string; items?: { title: string; route: string }[] }) => {
+  const items = category.items ?? [];
+  if (!searchQuery.value) return items;
   const query = searchQuery.value.toLowerCase();
   const categoryNameLower = category.name.toLowerCase();
   if (categoryNameLower.includes(query)) {
-    return category.items;
+    return items;
   } else {
-    return category.items.filter(item => item.title.toLowerCase().includes(query));
+    return items.filter(item => item.title.toLowerCase().includes(query));
   }
 };
 

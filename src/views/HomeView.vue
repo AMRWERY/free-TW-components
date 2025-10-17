@@ -46,12 +46,6 @@
 
       <!-- Main Search Input and Categories (when a category is selected) -->
       <div v-else class="flex flex-col">
-        <div ref="mainSearchInput" class="mb-8">
-          <input ref="searchInput" type="text" placeholder="Search components..."
-            class="w-full px-3 py-2.5 bg-[#1a1a24] border border-gray-800 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-all"
-            v-model="componentsStore.searchQuery" />
-        </div>
-
         <Transition name="fade">
           <!-- Component Categories -->
           <div class="space-y-24">

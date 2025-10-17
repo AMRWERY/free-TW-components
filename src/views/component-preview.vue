@@ -20,16 +20,17 @@
             </div>
 
             <!-- Component Preview Section -->
-            <div v-if="showPreview" class="rounded-md shadow-sm overflow-hidden bg-white p-4">
-                <div v-html="component?.code"></div>
+            <div v-if="showPreview" class="rounded-md shadow-sm overflow-hidden">
+                <iframe :key="component?.id" ref="previewFrame" class="w-full border-0 rounded-md bg-white"
+                    style="min-height: 800px" @load="loadPreview"></iframe>
             </div>
 
             <!-- Copy Code Section -->
             <div v-if="showCode" class="mt-4 p-4 border rounded-md bg-gray-100 shadow-sm">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="text-lg font-semibold">{{ component?.title || component?.name }}</h3>
-                    <button @click="handleCopy" :disabled="copied" class="px-3 py-1 rounded-md text-sm font-medium"
-                        :class="{
+                    <button @click="handleCopy" :disabled="copied"
+                        class="px-3 py-1 rounded-md text-sm font-medium text-white" :class="{
                             'bg-green-500 hover:bg-green-600': copied,
                             'bg-blue-500 hover:bg-blue-600': !copied,
                         }">
@@ -43,10 +44,8 @@
                         </span>
                     </button>
                 </div>
-                <div class="relative bg-gray-800 text-white p-4 rounded-md overflow-auto">
-                    <pre>
-                        <code class="language-html">{{ component?.code }}</code>
-                    </pre>
+                <div class="relative bg-gray-800 text-white p-4 rounded-md overflow-auto max-w-6xl">
+                    <pre class="text-sm"><code class="language-html">{{ component?.code }}</code></pre>
                 </div>
             </div>
         </div>
@@ -54,7 +53,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { useComponentsStore } from "@/stores/componentsStore";
 
@@ -64,29 +63,88 @@ const store = useComponentsStore();
 const showPreview = ref(true);
 const showCode = ref(false);
 const copied = ref(false);
+const previewFrame = ref<HTMLIFrameElement | null>(null);
 
-// computed reference to the component from the store
 const component = computed(() => store.getComponentByRoute(route.params.route as string));
 
-onMounted(async () => {
-    // fetch only if store is empty
-    if (!store.componentsData.length) {
-        await store.fetchComponents();
+const loadPreview = () => {
+    if (!previewFrame.value || !component.value?.code) return;
+
+    const iframe = previewFrame.value;
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!iframeDoc) return;
+
+    iframeDoc.open();
+    iframeDoc.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <script>
+                const originalWarn = console.warn;
+                console.warn = function(...args) {
+                    if (args[0]?.includes?.('cdn.tailwindcss.com should not be used in production')) {
+                        return;
+                    }
+                    originalWarn.apply(console, args);
+                };
+            <\/script>
+            <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,container-queries"><\/script>
+            <style>
+                body { margin: 0; padding: 0; }
+            </style>
+        </head>
+        <body>
+            ${component.value.code}
+        </body>
+        </html>
+    `);
+    iframeDoc.close();
+};
+
+// Watch component changes
+watch(component, async () => {
+    if (component.value && showPreview.value) {
+        await nextTick();
+        loadPreview();
     }
 });
 
-// Copy handler (store handles Firestore increment)
+// Watch route changes
+watch(() => route.params.route, async () => {
+    if (showPreview.value) {
+        await nextTick();
+        loadPreview();
+    }
+});
+
+// Watch showPreview toggle
+watch(showPreview, async (newValue) => {
+    if (newValue && component.value) {
+        await nextTick();
+        loadPreview();
+    }
+});
+
+onMounted(async () => {
+    if (!store.componentsData.length) {
+        await store.fetchComponents();
+    }
+    await nextTick();
+    if (showPreview.value) {
+        loadPreview();
+    }
+});
+
 const handleCopy = async () => {
     if (!component.value) return;
     try {
         await navigator.clipboard.writeText(component.value.code);
         copied.value = true;
         setTimeout(() => (copied.value = false), 1800);
-
-        // increment via store (store performs Firestore update)
         await store.incrementCopyCount(component.value.id);
     } catch (err) {
-        // keep errors out of the component; you can show UI if you want
         console.error("Copy failed:", err);
     }
 };

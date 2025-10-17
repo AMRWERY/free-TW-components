@@ -50,19 +50,33 @@
                 <!-- Scrollable List Area -->
                 <div class="flex-1 overflow-y-auto scrollbar-none max-h-[calc(100vh-128px)]">
                     <ul class="list-none p-0 pb-12 m-0 space-y-1">
+                        <li class="relative flex justify-between items-center px-3 py-3 rounded-lg cursor-pointer transition-all duration-300 text-sm font-medium group"
+                            :class="componentsStore.activeCategory === '' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' : 'text-gray-400 hover:text-white hover:bg-gray-800/50'"
+                            @click="selectCategory('')">
+                            <div v-if="componentsStore.activeCategory === ''"
+                                class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full">
+                            </div>
+                            <span class="flex-grow pl-2 capitalize">
+                                All Components
+                            </span>
+                            <span class="px-2 py-0.5 ml-2.5 rounded-md text-xs font-mono"
+                                :class="componentsStore.activeCategory === '' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-gray-800 text-gray-400 group-hover:bg-gray-700'">
+                                {{ componentsStore.totalComponents }}
+                            </span>
+                        </li>
                         <li v-for="category in filteredSidebarCategories" :key="category.name"
                             class="relative flex justify-between items-center px-3 py-3 rounded-lg cursor-pointer transition-all duration-300 text-sm font-medium group"
-                            :class="activeCategory === category.name ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' : 'text-gray-400 hover:text-white hover:bg-gray-800/50'"
-                            @click="scrollToCategory(category.name)">
-                            <div v-if="activeCategory === category.name"
+                            :class="componentsStore.activeCategory === category.name ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' : 'text-gray-400 hover:text-white hover:bg-gray-800/50'"
+                            @click="selectCategory(category.name)">
+                            <div v-if="componentsStore.activeCategory === category.name"
                                 class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full">
                             </div>
                             <span class="flex-grow pl-2 capitalize">
                                 {{ category.name.replace(' Components', '') }}
                             </span>
                             <span class="px-2 py-0.5 ml-2.5 rounded-md text-xs font-mono"
-                                :class="activeCategory === category.name ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-gray-800 text-gray-400 group-hover:bg-gray-700'">
-                                {{ getDisplayItems(category).length }}
+                                :class="componentsStore.activeCategory === category.name ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-gray-800 text-gray-400 group-hover:bg-gray-700'">
+                                {{ componentsStore.getDisplayItems(category).length }}
                             </span>
                         </li>
                     </ul>
@@ -78,7 +92,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, inject } from 'vue';
+import type { Ref } from 'vue';
 import { useComponentsStore } from '@/stores/componentsStore';
 
 const componentsStore = useComponentsStore();
@@ -87,87 +102,36 @@ onMounted(() => {
     componentsStore.fetchComponents();
 });
 
-const categories = computed(() => componentsStore.categories);
-
-const searchQuery = ref('');
 const sidebarOpen = ref(false);
-
-const getDisplayItems = (category: { name: string; items?: { title: string; route: string }[] }) => {
-    const items = category.items ?? [];
-    if (!searchQuery.value) return items;
-    const query = searchQuery.value.toLowerCase();
-    const categoryNameLower = category.name.toLowerCase();
-    if (categoryNameLower.includes(query)) {
-        return items;
-    } else {
-        return items.filter(item => item.title.toLowerCase().includes(query));
-    }
-};
-
-const filteredCategories = computed(() => {
-    if (!searchQuery.value) return categories.value;
-    return categories.value.filter(category => getDisplayItems(category).length > 0);
-});
-
 const sidebarSearchQuery = ref('');
-const activeCategory = ref('');
-const mainSearchInput = ref<{ $refs: { searchInput: HTMLInputElement } } | null>(null);
 
 const filteredSidebarCategories = computed(() => {
     if (!sidebarSearchQuery.value) {
-        return categories.value.filter(category => getDisplayItems(category).length > 0);
+        return componentsStore.categories.filter(category => componentsStore.getDisplayItems(category).length > 0);
     }
     const query = sidebarSearchQuery.value.toLowerCase();
-    return categories.value.filter(category => {
+    return componentsStore.categories.filter(category => {
         const matchesName = category.name.toLowerCase().includes(query);
-        const hasVisibleItems = getDisplayItems(category).length > 0;
+        const hasVisibleItems = componentsStore.getDisplayItems(category).length > 0;
         return matchesName && hasVisibleItems;
     });
 });
 
-const scrollToCategory = (categoryName: string) => {
-    const id = categoryName.replace(/\s+/g, '-');
-    const element = document.getElementById(id);
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        activeCategory.value = categoryName;
-        // Close sidebar on small screens (below lg: breakpoint, 1024px)
-        if (window.innerWidth < 1024) {
-            sidebarOpen.value = false;
-        }
+const selectCategory = (categoryName: string) => {
+    componentsStore.activeCategory = categoryName;
+    if (window.innerWidth < 1024) {
+        sidebarOpen.value = false;
     }
 };
 
-const handleScroll = () => {
-    let found = false;
-    for (let i = filteredCategories.value.length - 1; i >= 0; i--) {
-        const category = filteredCategories.value[i];
-        if (!category) continue;
-        const id = category.name.replace(/\s+/g, '-');
-        const element = document.getElementById(id);
-        if (element) {
-            const rect = element.getBoundingClientRect();
-            if (rect.top <= window.innerHeight / 3 && rect.bottom >= 0) {
-                activeCategory.value = category.name;
-                found = true;
-                break;
-            }
-        }
-    }
-    if (!found) {
-        activeCategory.value = '';
-    }
-};
+const mainSearchInput = (inject('mainSearchInput') as Ref<any> | undefined) ?? ref(null);
 
 const focusMainSearch = () => {
-    if (mainSearchInput.value?.$refs?.searchInput) {
-        mainSearchInput.value.$refs.searchInput.focus();
+    const target = mainSearchInput.value as any;
+    if (target?.$refs?.searchInput) {
+        target.$refs.searchInput.focus();
     }
 };
-
-onMounted(() => {
-    window.addEventListener('scroll', handleScroll);
-});
 
 onMounted(() => {
     const handleResize = () => {
@@ -177,12 +141,9 @@ onMounted(() => {
     };
     window.addEventListener('resize', handleResize);
     handleResize();
-    onBeforeUnmount(() => {
-        window.removeEventListener('resize', handleResize);
-    });
 });
 
 onBeforeUnmount(() => {
-    window.removeEventListener('scroll', handleScroll);
+    window.removeEventListener('resize', () => { });
 });
 </script>

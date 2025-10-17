@@ -44,7 +44,9 @@
                     </button>
                 </div>
                 <div class="relative bg-gray-800 text-white p-4 rounded-md overflow-auto">
-                    <pre><code class="language-html">{{ component?.code }}</code></pre>
+                    <pre>
+                        <code class="language-html">{{ component?.code }}</code>
+                    </pre>
                 </div>
             </div>
         </div>

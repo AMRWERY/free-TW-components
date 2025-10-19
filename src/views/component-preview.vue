@@ -1,6 +1,15 @@
 <template>
     <div>
         <div class="p-8 bg-[#0a0a0f] min-h-screen">
+            <div class="mb-4">
+                <button @click="goBack"
+                    class="flex items-center px-4 py-2 rounded-md bg-gray-700 text-white hover:bg-gray-600 transition-colors duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back
+                </button>
+            </div>
             <div class="flex justify-end gap-2 mb-4">
                 <button @click="showPreview = true; showCode = false"
                     class="p-2 rounded-md transition-colors duration-200" :class="{
@@ -54,18 +63,19 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch, nextTick } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useComponentsStore } from "@/stores/componentsStore";
 
 const route = useRoute();
-const store = useComponentsStore();
+const router = useRouter();
+const componentStore = useComponentsStore();
 
 const showPreview = ref(true);
 const showCode = ref(false);
 const copied = ref(false);
 const previewFrame = ref<HTMLIFrameElement | null>(null);
 
-const component = computed(() => store.getComponentByRoute(route.params.route as string));
+const component = computed(() => componentStore.getComponentByRoute(route.params.route as string));
 
 const loadPreview = () => {
     if (!previewFrame.value || !component.value?.code) return;
@@ -128,8 +138,8 @@ watch(showPreview, async (newValue) => {
 });
 
 onMounted(async () => {
-    if (!store.componentsData.length) {
-        await store.fetchComponents();
+    if (!componentStore.componentsData.length) {
+        await componentStore.fetchComponents();
     }
     await nextTick();
     if (showPreview.value) {
@@ -143,9 +153,17 @@ const handleCopy = async () => {
         await navigator.clipboard.writeText(component.value.code);
         copied.value = true;
         setTimeout(() => (copied.value = false), 1800);
-        await store.incrementCopyCount(component.value.id);
+        await componentStore.incrementCopyCount(component.value.id);
     } catch (err) {
         console.error("Copy failed:", err);
     }
+};
+
+const goBack = () => {
+    const category = component.value?.category || "Uncategorized";
+    router.push({
+        path: `/`,
+        hash: `#${category.replace(/\s+/g, '-')}`,
+    });
 };
 </script>

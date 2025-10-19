@@ -92,13 +92,15 @@ const loadPreview = () => {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <script>
-                const originalWarn = console.warn;
-                console.warn = function(...args) {
+                (function() {
+                  const originalConsoleWarn = console.warn;
+                  console.warn = function(...args) {
                     if (args[0]?.includes?.('cdn.tailwindcss.com should not be used in production')) {
-                        return;
-                    }
-                    originalWarn.apply(console, args);
-                };
+                    return;
+                     }
+                  originalConsoleWarn.apply(console, args);
+                  };
+               })();
             <\/script>
             <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,container-queries"><\/script>
             <style>

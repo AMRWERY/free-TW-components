@@ -85,7 +85,7 @@
                 </div>
 
                 <!-- Neon Grid Cards -->
-                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   <div class="relative group" v-for="item in componentsStore.getDisplayItems(category)"
                     :key="item.title">
                     <div

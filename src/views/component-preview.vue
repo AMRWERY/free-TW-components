@@ -43,11 +43,11 @@
                             'bg-green-500 hover:bg-green-600': copied,
                             'bg-blue-500 hover:bg-blue-600': !copied,
                         }">
-                        <span class="flex items-center gap-1" v-if="copied">
+                        <span class="flex items-center justify-center gap-2 p-1" v-if="copied">
                             Copied
                             <img src="/svg/check-icon.svg" alt="check-icon" class="w-4 h-4" />
                         </span>
-                        <span class="flex items-center gap-1" v-else>
+                        <span class="flex items-center justify-center gap-2 p-1" v-else>
                             Copy
                             <img src="/svg/copy-icon.svg" alt="copy-icon" class="w-4 h-4" />
                         </span>

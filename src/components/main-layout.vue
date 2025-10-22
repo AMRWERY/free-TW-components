@@ -90,11 +90,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, onBeforeUnmount, inject } from 'vue';
-import type { Ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useComponentsStore } from '@/stores/componentsStore';
-
 const router = useRouter();
 const componentsStore = useComponentsStore();
 

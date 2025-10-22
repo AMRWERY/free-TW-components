@@ -13,8 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { RouterView } from 'vue-router'
-import mainLayout from './components/main-layout.vue';
+
 </script>
 
 <style>

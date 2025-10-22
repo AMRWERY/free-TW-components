@@ -206,9 +206,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, provide } from 'vue';
-import { useComponentsStore } from '@/stores/componentsStore';
-
 const componentsStore = useComponentsStore();
 
 const mainSearchInput = ref<{ $refs: { searchInput: HTMLInputElement } } | null>(null);

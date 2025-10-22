@@ -1,5 +1,3 @@
-import { ref } from "vue";
-import type { Ref } from "vue";
 import { useClipboard } from "@vueuse/core";
 
 export function useClipboardExample(

@@ -62,10 +62,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, watch, nextTick } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useComponentsStore } from "@/stores/componentsStore";
-
 const route = useRoute();
 const router = useRouter();
 const componentStore = useComponentsStore();

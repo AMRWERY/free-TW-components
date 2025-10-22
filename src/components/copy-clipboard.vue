@@ -19,7 +19,5 @@
 </template>
 
 <script lang="ts" setup>
-import { useClipboardExample } from '@/composables/useClipboard'
-
 const { source, copied, isSupported, onCopy } = useClipboardExample();
 </script>

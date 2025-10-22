@@ -152,6 +152,7 @@ const handleCopy = async () => {
         copied.value = true;
         setTimeout(() => (copied.value = false), 1800);
         await componentStore.incrementCopyCount(component.value.id);
+        await componentStore.fetchComponents();
     } catch (err) {
         console.error("Copy failed:", err);
     }

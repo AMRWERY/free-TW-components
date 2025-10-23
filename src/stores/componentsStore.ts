@@ -13,6 +13,8 @@ export const useComponentsStore = defineStore("componentsStore", () => {
   const error = ref<string | null>(null);
   const searchQuery = ref("");
   const activeCategory = ref("");
+  const currentPage = ref(1);
+  const itemsPerPage = ref(10);
 
   // Fetch components from Firestore
   const fetchComponents = async () => {
@@ -82,14 +84,12 @@ export const useComponentsStore = defineStore("componentsStore", () => {
   // Filtered categories based on searchQuery and activeCategory
   const filteredCategories = computed(() => {
     let result = categories.value;
-
     // Filter by active category (show all if activeCategory is '')
     if (activeCategory.value) {
       result = result.filter(
         (category) => category.name === activeCategory.value
       );
     }
-
     // Filter by search query
     if (searchQuery.value) {
       const query = searchQuery.value.toLowerCase();
@@ -106,7 +106,6 @@ export const useComponentsStore = defineStore("componentsStore", () => {
         );
       });
     }
-
     return result.filter((category) => getDisplayItems(category).length > 0);
   });
 
@@ -129,12 +128,37 @@ export const useComponentsStore = defineStore("componentsStore", () => {
     );
   };
 
-  // Total components count for "All Components" tab
+  // --- NEW PAGINATION LOGIC ---
+
+  // All components that match the current filters (search, active category)
+  const allFilteredComponents = computed(() => {
+    if (!activeCategory.value) {
+      // If no active category, flatten all filtered categories
+      return filteredCategories.value.flatMap((category) =>
+        getDisplayItems(category)
+      );
+    } else {
+      // If an active category, find it and return its filtered items
+      const selectedCategory = filteredCategories.value.find(
+        (cat) => cat.name === activeCategory.value
+      );
+      return selectedCategory ? getDisplayItems(selectedCategory) : [];
+    }
+  });
+
+  const totalPages = computed(() => {
+    return Math.ceil(allFilteredComponents.value.length / itemsPerPage.value);
+  });
+
+  const paginatedComponents = computed(() => {
+    const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+    const endIndex = startIndex + itemsPerPage.value;
+    return allFilteredComponents.value.slice(startIndex, endIndex);
+  });
+
+  // Total components count for "All Components" tab (if needed, this might be simplified now)
   const totalComponents = computed(() => {
-    return categories.value.reduce(
-      (sum, category) => sum + (category.items?.length || 0),
-      0
-    );
+    return componentsData.value.length; // All components before filtering
   });
 
   return {
@@ -150,5 +174,26 @@ export const useComponentsStore = defineStore("componentsStore", () => {
     filteredCategories,
     getDisplayItems,
     totalComponents,
+    currentPage,
+    itemsPerPage,
+    totalPages,
+    paginatedComponents,
+
+    // Pagination methods
+    displayedItemsCount: computed(() => allFilteredComponents.value.length),
+
+    // Pagination methods
+    nextPage: () => {
+      if (currentPage.value < totalPages.value) currentPage.value++;
+    },
+    prevPage: () => {
+      if (currentPage.value > 1) currentPage.value--;
+    },
+    goToPage: (page: number) => {
+      if (page >= 1 && page <= totalPages.value) currentPage.value = page;
+    },
+    resetPagination: () => {
+      currentPage.value = 1;
+    },
   };
 });

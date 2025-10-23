@@ -13,6 +13,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     CopyClipboard: typeof import('./src/components/copy-clipboard.vue')['default']
     MainLayout: typeof import('./src/components/main-layout.vue')['default']
+    Pagination: typeof import('./src/components/pagination.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

@@ -50,8 +50,9 @@
           <Transition name="fade">
             <!-- Component Categories -->
             <div class="space-y-24">
-              <div v-for="category in componentsStore.filteredCategories" :key="category.name" class="space-y-8"
-                :id="category.name.replace(/\s+/g, '-')">
+              <!-- Category Header remains, but we might only show one if activeCategory is set -->
+              <div v-if="componentsStore.activeCategory" :key="componentsStore.activeCategory" class="space-y-8"
+                :id="componentsStore.activeCategory.replace(/\s+/g, '-')">
                 <!-- Glassmorphism Category Header -->
                 <div class="relative group">
                   <div
@@ -63,11 +64,11 @@
                         <h2 class="text-4xl font-bold mb-2">
                           <span
                             class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 capitalize">
-                            {{ category.name }}
+                            {{ componentsStore.activeCategory }}
                           </span>
                         </h2>
                         <div class="flex items-center space-x-4 text-sm">
-                          <span class="text-gray-400">{{ componentsStore.getDisplayItems(category).length }}
+                          <span class="text-gray-400">{{ componentsStore.displayedItemsCount }}
                             components</span>
                           <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
                           <span class="text-cyan-400 font-mono">Ready to use</span>
@@ -118,8 +119,8 @@
                   'grid gap-5 transition-all duration-500',
                   layoutMode === 'single' ? 'grid-cols-1 lg:grid-cols-1' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
                 ]">
-                  <div v-for="item in componentsStore.getDisplayItems(category)" :key="item.title"
-                    class="relative group">
+                  <!-- Iterate directly over paginatedComponents -->
+                  <div v-for="item in componentsStore.paginatedComponents" :key="item.title" class="relative group">
                     <div
                       class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl opacity-0 group-hover:opacity-50 blur transition duration-500">
                     </div>
@@ -219,6 +220,11 @@
               </div>
             </div>
           </Transition>
+
+          <!-- pagination component -->
+          <pagination
+            v-if="componentsStore.activeCategory && componentsStore.displayedItemsCount > componentsStore.itemsPerPage"
+            :total-items="componentsStore.displayedItemsCount" />
         </div>
       </div>
     </div>
@@ -233,6 +239,15 @@ const mainSearchInput = ref<{ $refs: { searchInput: HTMLInputElement } } | null>
 const layoutMode = ref<'grid' | 'single'>('grid');
 
 provide('mainSearchInput', mainSearchInput);
+
+watch(() => componentsStore.activeCategory, () => {
+  componentsStore.resetPagination()
+})
+
+// Watch search to reset pagination
+watch(() => componentsStore.searchQuery, () => {
+  componentsStore.resetPagination()
+})
 </script>
 
 <style scoped>

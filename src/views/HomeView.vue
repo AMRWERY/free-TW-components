@@ -84,20 +84,75 @@
                   </div>
                 </div>
 
-                <!-- Neon Grid Cards -->
-                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  <div class="relative group" v-for="item in componentsStore.getDisplayItems(category)"
-                    :key="item.title">
+                <!-- Toggle View btns -->
+                <div class="flex justify-end mb-6 space-x-2">
+                  <!-- 3 Cards Button (Active by default) -->
+                  <button @click="layoutMode = 'grid'" :class="[
+                    'px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center',
+                    layoutMode === 'grid'
+                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/25'
+                      : 'bg-white/10 backdrop-blur-sm border border-white/20 text-gray-300 hover:text-white hover:bg-white/20'
+                  ]">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                  </button>
+
+                  <!-- 1 Card Button -->
+                  <button @click="layoutMode = 'single'" :class="[
+                    'px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center',
+                    layoutMode === 'single'
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
+                      : 'bg-white/10 backdrop-blur-sm border border-white/20 text-gray-300 hover:text-white hover:bg-white/20'
+                  ]">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h7" />
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Neon Grid Cards - RESPONSIVE LAYOUT -->
+                <div :class="[
+                  'grid gap-5 transition-all duration-500',
+                  layoutMode === 'single' ? 'grid-cols-1 lg:grid-cols-1' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+                ]">
+                  <div v-for="item in componentsStore.getDisplayItems(category)" :key="item.title"
+                    class="relative group">
                     <div
                       class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl opacity-0 group-hover:opacity-50 blur transition duration-500">
                     </div>
+
                     <router-link :to="`/${item.route}`">
-                      <div
-                        class="relative h-40 overflow-hidden rounded-xl bg-[#13131a] border border-gray-800 group-hover:border-cyan-500/50 transition-all duration-500">
+                      <div :class="[
+                        'relative overflow-hidden rounded-xl bg-[#13131a] border border-gray-800 group-hover:border-cyan-500/50 transition-all duration-500',
+                        layoutMode === 'single' ? 'h-96 p-8' : 'h-40 p-5'  // Tall card for single view
+                      ]">
                         <!-- Grid Pattern Background -->
                         <div class="absolute inset-0 opacity-10">
                           <div class="absolute inset-0"
                             style="background-image: linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px); background-size: 20px 20px;">
+                          </div>
+                        </div>
+
+                        <!-- SINGLE VIEW ONLY: Thumbnail Display Area -->
+                        <div v-if="layoutMode === 'single'" class="relative h-48 mb-6 border-b border-gray-800/50">
+                          <!-- Thumbnail Preview Area -->
+                          <div
+                            class="absolute inset-0 bg-gradient-to-br from-gray-900/50 to-transparent flex items-center justify-center">
+                            <div
+                              class="w-full h-full border-2 border-dashed border-gray-600/50 rounded-lg flex items-center justify-center">
+                              <div class="text-center text-gray-500">
+                                <svg class="w-16 h-16 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor"
+                                  viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <p class="text-sm font-medium">Live Preview</p>
+                                <p class="text-xs">Click card to view full demo</p>
+                              </div>
+                            </div>
                           </div>
                         </div>
 
@@ -107,7 +162,7 @@
                         </div>
 
                         <!-- Content -->
-                        <div class="relative h-full p-5 flex flex-col justify-between">
+                        <div class="relative h-full flex flex-col justify-between">
                           <div class="flex items-start justify-between">
                             <div
                               class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
@@ -123,15 +178,27 @@
                             </div>
                           </div>
 
-                          <div>
-                            <h3
-                              class="text-lg font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors duration-300">
+                          <!-- SINGLE VIEW: Larger Title & Description -->
+                          <div :class="[
+                            'flex-grow',
+                            layoutMode === 'single' ? 'mt-4 mb-6' : ''
+                          ]">
+                            <h3 class="text-lg font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors duration-300 
+                       lg:text-2xl" :class="layoutMode === 'single' ? 'leading-tight' : ''">
                               {{ item.title }}
                             </h3>
+
                             <p class="text-xs text-gray-500 font-mono">Click to preview</p>
                           </div>
-                        </div>
 
+                          <!-- SINGLE VIEW: Additional Info -->
+                          <div v-if="layoutMode === 'single'"
+                            class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                            <span>📱 Responsive</span>
+                            <span>⚡ Copy & Paste</span>
+                            <span>🎨 Customizable</span>
+                          </div>
+                        </div>
                         <!-- Bottom Neon Line -->
                         <div
                           class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left">
@@ -152,53 +219,6 @@
               </div>
             </div>
           </Transition>
-
-          <Transition name="fade">
-            <!-- Cyberpunk No Results -->
-            <div v-if="componentsStore.searchQuery && componentsStore.filteredCategories.length === 0"
-              class="flex flex-col items-center justify-center py-32 flex-grow">
-              <div class="relative">
-                <!-- Animated Rings -->
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <div class="w-48 h-48 rounded-full border-2 border-cyan-500/20 animate-ping-slow"></div>
-                  <div class="absolute w-40 h-40 rounded-full border-2 border-blue-500/20 animate-ping-slower"></div>
-                </div>
-
-                <!-- Center Icon -->
-                <div
-                  class="relative w-32 h-32 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 flex items-center justify-center backdrop-blur-sm">
-                  <svg class="w-16 h-16 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </div>
-              </div>
-
-              <h3 class="text-3xl font-bold mb-3">
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
-                  No Components Found
-                </span>
-              </h3>
-
-              <p class="text-gray-400 mb-2 text-center max-w-md">
-                No matches for
-                <span class="font-mono text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-lg border border-cyan-500/30">{{
-                  componentsStore.searchQuery }}</span>
-              </p>
-
-              <p class="text-gray-600 text-sm mb-8">Try different keywords or clear your search</p>
-
-              <button @click="componentsStore.searchQuery = ''" class="relative group">
-                <div
-                  class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg opacity-50 group-hover:opacity-100 blur transition duration-300">
-                </div>
-                <div
-                  class="relative px-8 py-3 bg-[#13131a] rounded-lg font-semibold text-cyan-400 border border-cyan-500/30 group-hover:text-white transition-colors">
-                  Clear Search
-                </div>
-              </button>
-            </div>
-          </Transition>
         </div>
       </div>
     </div>
@@ -209,6 +229,8 @@
 const componentsStore = useComponentsStore();
 
 const mainSearchInput = ref<{ $refs: { searchInput: HTMLInputElement } } | null>(null);
+
+const layoutMode = ref<'grid' | 'single'>('grid');
 
 provide('mainSearchInput', mainSearchInput);
 </script>

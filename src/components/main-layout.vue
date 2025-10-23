@@ -26,7 +26,8 @@
                 'translate-x-0': sidebarOpen,
                 '-translate-x-full': !sidebarOpen,
                 'lg:translate-x-0': true
-            }" class="fixed inset-y-0 left-0 w-[280px] bg-[#13131a] text-white p-5 shrink-0 flex flex-col border-r border-gray-800/50 transition-transform duration-300 ease-in-out z-40 lg:fixed lg:top-0 lg:bottom-0 lg:block lg:h-screen">
+            }"
+                class="fixed inset-y-0 left-0 w-[280px] bg-[#13131a] text-white p-5 shrink-0 flex flex-col border-r border-gray-800/50 transition-transform duration-300 ease-in-out z-40 lg:fixed lg:top-0 lg:bottom-0 lg:block lg:h-screen">
                 <div class="text-xl font-bold mb-5 pb-4 border-b border-gray-800/50 flex-shrink-0">
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Free TW
                         Components</span>
@@ -121,7 +122,7 @@ const selectCategory = (categoryName: string) => {
     router.push('/'); // Navigate back to home to show component cards
 };
 
-const mainSearchInput = (inject('mainSearchInput') as Ref<any> | undefined) ?? ref(null);
+const mainSearchInput = ref(null);
 
 const focusMainSearch = () => {
     const target = mainSearchInput.value as any;

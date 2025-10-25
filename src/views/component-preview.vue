@@ -30,8 +30,8 @@
 
             <!-- Component Preview Section -->
             <div v-if="showPreview" class="rounded-md shadow-sm overflow-hidden">
-                <iframe :key="component?.id" ref="previewFrame" class="w-full border-0 rounded-md bg-white"
-                    style="min-height: 800px" @load="loadPreview"></iframe>
+                <iframe :key="component?.id" ref="previewFrame"
+                    class="w-full border-0 rounded-md bg-white p-4 min-h-[800px]" @load="loadPreview"></iframe>
             </div>
 
             <!-- Copy Code Section -->

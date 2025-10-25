@@ -6,6 +6,8 @@ import {
   increment,
 } from "firebase/firestore";
 import { db } from "@/firebase";
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
 
 export const useComponentsStore = defineStore("componentsStore", () => {
   const componentsData = ref<any[]>([]);
@@ -34,10 +36,12 @@ export const useComponentsStore = defineStore("componentsStore", () => {
           code: data.code,
           copy_count: data.copy_count || 0,
           created_at: data.created_at,
-          description: data.description || "", // Optional for search
+          description: data.description || "",
+          thumbnail: data.thumbnail || null, // Include thumbnail field
         });
       });
       componentsData.value = fetchedData;
+      console.log("Fetched components:", fetchedData); // Debug: Log fetched data
     } catch (err: any) {
       error.value = err.message;
       console.error("Error fetching components:", err);
@@ -112,7 +116,12 @@ export const useComponentsStore = defineStore("componentsStore", () => {
   // Get display items for a category
   const getDisplayItems = (category: {
     name: string;
-    items?: { title: string; route: string; description?: string }[];
+    items?: {
+      title: string;
+      route: string;
+      description?: string;
+      thumbnail: string | null;
+    }[];
   }) => {
     const items = category.items ?? [];
     if (!searchQuery.value) return items;
@@ -128,17 +137,13 @@ export const useComponentsStore = defineStore("componentsStore", () => {
     );
   };
 
-  // --- NEW PAGINATION LOGIC ---
-
   // All components that match the current filters (search, active category)
   const allFilteredComponents = computed(() => {
     if (!activeCategory.value) {
-      // If no active category, flatten all filtered categories
       return filteredCategories.value.flatMap((category) =>
         getDisplayItems(category)
       );
     } else {
-      // If an active category, find it and return its filtered items
       const selectedCategory = filteredCategories.value.find(
         (cat) => cat.name === activeCategory.value
       );
@@ -156,9 +161,8 @@ export const useComponentsStore = defineStore("componentsStore", () => {
     return allFilteredComponents.value.slice(startIndex, endIndex);
   });
 
-  // Total components count for "All Components" tab (if needed, this might be simplified now)
   const totalComponents = computed(() => {
-    return componentsData.value.length; // All components before filtering
+    return componentsData.value.length;
   });
 
   return {
@@ -178,11 +182,7 @@ export const useComponentsStore = defineStore("componentsStore", () => {
     itemsPerPage,
     totalPages,
     paginatedComponents,
-
-    // Pagination methods
     displayedItemsCount: computed(() => allFilteredComponents.value.length),
-
-    // Pagination methods
     nextPage: () => {
       if (currentPage.value < totalPages.value) currentPage.value++;
     },

@@ -114,8 +114,41 @@
                   </button>
                 </div>
 
+                <div v-if="isLoadingPage" :class="[
+                  'grid gap-5 transition-all duration-500',
+                  layoutMode === 'single' ? 'grid-cols-1 lg:grid-cols-1' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+                ]">
+                  <div v-for="i in componentsStore.itemsPerPage" :key="`skeleton-${i}`" class="relative group">
+                    <div :class="[
+                      'relative overflow-hidden rounded-xl bg-[#13131a] border border-gray-800 animate-pulse',
+                      layoutMode === 'single' ? 'h-96 p-8' : 'h-40 p-5'
+                    ]">
+                      <!-- Skeleton Content for Single View -->
+                      <div v-if="layoutMode === 'single'" class="space-y-4">
+                        <div class="h-48 bg-gray-800/50 rounded-lg"></div>
+                        <div class="h-6 bg-gray-800/50 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-800/50 rounded w-1/2"></div>
+                        <div class="flex justify-between mt-4">
+                          <div class="h-4 bg-gray-800/50 rounded w-20"></div>
+                          <div class="h-4 bg-gray-800/50 rounded w-20"></div>
+                          <div class="h-4 bg-gray-800/50 rounded w-20"></div>
+                        </div>
+                      </div>
+                      <!-- Skeleton Content for Grid View -->
+                      <div v-else class="space-y-3">
+                        <div class="flex justify-between items-center">
+                          <div class="w-10 h-10 bg-gray-800/50 rounded-lg"></div>
+                          <div class="w-5 h-5 bg-gray-800/50 rounded"></div>
+                        </div>
+                        <div class="h-5 bg-gray-800/50 rounded w-2/3"></div>
+                        <div class="h-3 bg-gray-800/50 rounded w-1/2"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <!-- Neon Grid Cards - RESPONSIVE LAYOUT -->
-                <div :class="[
+                <div v-else :class="[
                   'grid gap-5 transition-all duration-500',
                   layoutMode === 'single' ? 'grid-cols-1 lg:grid-cols-1' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
                 ]">
@@ -186,8 +219,9 @@
                             'flex-grow',
                             layoutMode === 'single' ? 'mt-4 mb-6' : ''
                           ]">
-                            <h3 class="text-lg font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors duration-300 
-                       lg:text-2xl" :class="layoutMode === 'single' ? 'leading-tight' : ''">
+                            <h3
+                              class="text-lg font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors duration-300 lg:text-2xl"
+                              :class="layoutMode === 'single' ? 'leading-tight' : ''">
                               {{ item.title }}
                             </h3>
 
@@ -250,6 +284,24 @@ watch(() => componentsStore.activeCategory, () => {
 watch(() => componentsStore.searchQuery, () => {
   componentsStore.resetPagination()
 })
+
+const isLoadingPage = ref(false);
+const contentContainer = ref<HTMLElement | null>(null);
+
+watch(() => componentsStore.currentPage, async () => {
+  isLoadingPage.value = true;
+
+  // Scroll to top of content
+  if (contentContainer.value) {
+    contentContainer.value.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Simulate loading delay (remove if data fetching handles this)
+  await new Promise(resolve => setTimeout(resolve, 300));
+  isLoadingPage.value = false;
+});
 
 const isValidBase64 = (str: string | null): boolean => {
   if (!str) return false;

@@ -5,14 +5,15 @@
             <div class="text-sm text-gray-400 font-mono">
                 Page {{ componentsStore.currentPage }} of {{ componentsStore.totalPages }}
                 <span class="text-cyan-400 ml-2">
-                    {{ totalItems }} components <!-- This `totalItems` now comes from the prop -->
+                    {{ totalItems }} components
                 </span>
             </div>
 
             <!-- Pagination Buttons -->
             <div class="flex items-center space-x-2">
                 <!-- Previous Button -->
-                <button @click="componentsStore.prevPage" :disabled="componentsStore.currentPage === 1"
+                <button @click="handlePageChange(componentsStore.currentPage - 1)"
+                    :disabled="componentsStore.currentPage === 1"
                     class="relative p-3 rounded-xl transition-all duration-300 flex items-center justify-center group"
                     :class="componentsStore.currentPage === 1
                         ? 'bg-gray-800/50 text-gray-500 cursor-not-allowed'
@@ -23,7 +24,7 @@
                 </button>
 
                 <!-- Page Numbers -->
-                <button v-for="pageNum in visiblePageRange" :key="pageNum" @click="componentsStore.goToPage(pageNum)"
+                <button v-for="pageNum in visiblePageRange" :key="pageNum" @click="handlePageChange(pageNum)"
                     class="relative px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center group"
                     :class="componentsStore.currentPage === pageNum
                         ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/25 scale-105'
@@ -32,7 +33,7 @@
                 </button>
 
                 <!-- Next Button -->
-                <button @click="componentsStore.nextPage"
+                <button @click="handlePageChange(componentsStore.currentPage + 1)"
                     :disabled="componentsStore.currentPage === componentsStore.totalPages"
                     class="relative p-3 rounded-xl transition-all duration-300 flex items-center justify-center group"
                     :class="componentsStore.currentPage === componentsStore.totalPages
@@ -49,37 +50,44 @@
 
 <script lang="ts" setup>
 defineProps<{
-    totalItems: number // Prop type should be explicitly defined
+    totalItems: number
 }>()
 
 const componentsStore = useComponentsStore()
 
+const handlePageChange = (page: number) => {
+    componentsStore.goToPage(page);
+};
+
 const visiblePageRange = computed(() => {
     const delta = 2
     const rangeWithDots: (number | string)[] = []
-    // Ensure 1 is always included if totalPages exists
+
     if (componentsStore.totalPages > 0) {
         rangeWithDots.push(1)
     }
-    // Calculate start and end for the middle range
+
     let start = Math.max(2, componentsStore.currentPage - delta);
     let end = Math.min(componentsStore.totalPages - 1, componentsStore.currentPage + delta);
-    // Add '...' if necessary at the beginning
+
     if (start > 2) {
         rangeWithDots.push('...')
     }
+
     for (let i = start; i <= end; i++) {
         if (!rangeWithDots.includes(i)) {
             rangeWithDots.push(i)
         }
     }
-    // Add '...' if necessary at the end
+
     if (end < componentsStore.totalPages - 1 && componentsStore.totalPages > 1) {
         rangeWithDots.push('...')
     }
+
     if (componentsStore.totalPages > 1 && !rangeWithDots.includes(componentsStore.totalPages)) {
         rangeWithDots.push(componentsStore.totalPages)
     }
+
     return rangeWithDots.filter((p): p is number => typeof p === 'number')
 })
 </script>

@@ -10,28 +10,67 @@
                     Back
                 </button>
             </div>
-            <div class="flex justify-end gap-2 mb-4">
-                <button @click="showPreview = true; showCode = false"
-                    class="p-2 rounded-md transition-colors duration-200" :class="{
-                        'bg-indigo-500 text-white': showPreview,
-                        'bg-gray-200 text-gray-700 hover:bg-gray-300': !showPreview,
-                    }" aria-label="Show Component Preview">
-                    <img src="/svg/eye-icon.svg" alt="eye-icon" class="h-6 w-6" />
-                </button>
 
-                <button @click="showCode = true; showPreview = false"
-                    class="p-2 rounded-md transition-colors duration-200" :class="{
-                        'bg-indigo-500 text-white': showCode,
-                        'bg-gray-200 text-gray-700 hover:bg-gray-300': !showCode,
-                    }" aria-label="Show Component Code">
-                    <img src="/svg/code-icon.svg" alt="code-icon" class="h-6 w-6" />
-                </button>
+            <div class="flex justify-between items-center gap-2 mb-4">
+                <!-- Preset Width Buttons -->
+                <div class="flex gap-2">
+                    <button @click="setPreviewWidth(375)"
+                        class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        :class="previewWidth === 375 ? 'bg-indigo-500 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'">
+                        📱 Mobile
+                    </button>
+                    <button @click="setPreviewWidth(768)"
+                        class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        :class="previewWidth === 768 ? 'bg-indigo-500 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'">
+                        💻 Tablet
+                    </button>
+                    <button @click="setPreviewWidth(1024)"
+                        class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        :class="previewWidth === 1024 ? 'bg-indigo-500 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'">
+                        🖥️ Desktop
+                    </button>
+                    <button @click="setPreviewWidth(null)"
+                        class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        :class="previewWidth === null ? 'bg-indigo-500 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'">
+                        ↔️ Full
+                    </button>
+                </div>
+
+                <!-- Preview/Code Toggle -->
+                <div class="flex gap-2">
+                    <button @click="showPreview = true; showCode = false"
+                        class="p-2 rounded-md transition-colors duration-200" :class="{
+                            'bg-indigo-500 text-white': showPreview,
+                            'bg-gray-200 text-gray-700 hover:bg-gray-300': !showPreview,
+                        }" aria-label="Show Component Preview">
+                        <img src="/svg/eye-icon.svg" alt="eye-icon" class="h-6 w-6" />
+                    </button>
+
+                    <button @click="showCode = true; showPreview = false"
+                        class="p-2 rounded-md transition-colors duration-200" :class="{
+                            'bg-indigo-500 text-white': showCode,
+                            'bg-gray-200 text-gray-700 hover:bg-gray-300': !showCode,
+                        }" aria-label="Show Component Code">
+                        <img src="/svg/code-icon.svg" alt="code-icon" class="h-6 w-6" />
+                    </button>
+                </div>
+            </div>
+
+            <!-- Width Display -->
+            <div v-if="showPreview && containerWidth" class="mb-2 text-center">
+                <span class="text-sm text-gray-400">
+                    Width: {{ Math.round(containerWidth) }}px
+                </span>
             </div>
 
             <!-- Component Preview Section -->
-            <div v-if="showPreview" class="rounded-md shadow-sm overflow-hidden">
-                <iframe :key="component?.id" ref="previewFrame"
-                    class="w-full border-0 rounded-md bg-white p-4 min-h-[800px]" @load="loadPreview"></iframe>
+            <div v-if="showPreview" class="flex justify-center rounded-md shadow-sm overflow-visible">
+                <div ref="resizableContainer"
+                    class="relative rounded-md shadow-sm overflow-hidden bg-gray-800 p-1 transition-all duration-300 ease-in-out"
+                    :style="{ width: previewWidth ? `${previewWidth}px` : '100%', maxWidth: '100%' }">
+                    <iframe :key="component?.id" ref="previewFrame"
+                        class="w-full border-0 rounded-md bg-white min-h-[800px]" @load="loadPreview"></iframe>
+                </div>
             </div>
 
             <!-- Copy Code Section -->
@@ -62,6 +101,8 @@
 </template>
 
 <script lang="ts" setup>
+import { useResizeObserver } from '@vueuse/core'
+
 const route = useRoute();
 const router = useRouter();
 const componentStore = useComponentsStore();
@@ -70,8 +111,24 @@ const showPreview = ref(true);
 const showCode = ref(false);
 const copied = ref(false);
 const previewFrame = ref<HTMLIFrameElement | null>(null);
+const resizableContainer = ref<HTMLDivElement | null>(null);
+const previewWidth = ref<number | null>(null); // Start with full width
+const containerWidth = ref(0);
 
 const component = computed(() => componentStore.getComponentByRoute(route.params.route as string));
+
+// Use useResizeObserver to track container dimensions
+useResizeObserver(resizableContainer, (entries) => {
+    const entry = entries[0];
+    if (!entry) return;
+
+    const { width } = entry.contentRect;
+    containerWidth.value = width;
+});
+
+const setPreviewWidth = (width: number | null) => {
+    previewWidth.value = width;
+};
 
 const loadPreview = () => {
     if (!previewFrame.value || !component.value?.code) return;

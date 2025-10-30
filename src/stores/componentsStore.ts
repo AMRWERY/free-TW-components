@@ -41,10 +41,10 @@ export const useComponentsStore = defineStore("componentsStore", () => {
         });
       });
       componentsData.value = fetchedData;
-      console.log("Fetched components:", fetchedData); // Debug: Log fetched data
+      // console.log("Fetched components:", fetchedData);
     } catch (err: any) {
       error.value = err.message;
-      console.error("Error fetching components:", err);
+      // console.error("Error fetching components:", err);
     } finally {
       loading.value = false;
     }
@@ -67,7 +67,7 @@ export const useComponentsStore = defineStore("componentsStore", () => {
         componentsData.value[idx].copy_count =
           (componentsData.value[idx].copy_count || 0) + 1;
     } catch (err) {
-      console.error("Failed to increment copy count:", err);
+      // console.error("Failed to increment copy count:", err);
     }
   };
 

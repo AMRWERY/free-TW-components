@@ -220,7 +220,7 @@
                             layoutMode === 'single' ? 'mt-4 mb-6' : ''
                           ]">
                             <h3
-                              class="text-lg font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors duration-300 lg:text-2xl"
+                              class="text-lg font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors duration-300 lg:text-2xl mt-2"
                               :class="layoutMode === 'single' ? 'leading-tight' : ''">
                               {{ item.title }}
                             </h3>

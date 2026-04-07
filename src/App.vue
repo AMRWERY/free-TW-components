@@ -17,13 +17,18 @@
 </script>
 
 <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
+.slide-fade-enter-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
-
-.fade-enter-from,
-.fade-leave-to {
+.slide-fade-leave-active {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.slide-fade-enter-from {
   opacity: 0;
+  transform: translateY(8px);
+}
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 </style>

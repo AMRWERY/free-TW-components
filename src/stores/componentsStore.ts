@@ -18,36 +18,50 @@ export const useComponentsStore = defineStore("componentsStore", () => {
   const currentPage = ref(1);
   const itemsPerPage = ref(10);
 
-  // Fetch components from Firestore
-  const fetchComponents = async () => {
-    loading.value = true;
-    error.value = null;
-    try {
-      const querySnapshot = await getDocs(collection(db, "components"));
-      const fetchedData: any[] = [];
-      querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        fetchedData.push({
-          id: docSnap.id,
-          title: data.title || data.name,
-          name: data.name,
-          category: data.category || "Uncategorized",
-          route: data.route,
-          code: data.code,
-          copy_count: data.copy_count || 0,
-          created_at: data.created_at,
-          description: data.description || "",
-          thumbnail: data.thumbnail || null, // Include thumbnail field
+  // Track whether data has been successfully fetched at least once,
+  // and keep a reference to any in-flight promise to avoid duplicate requests.
+  let hasFetched = false;
+  let fetchPromise: Promise<void> | null = null;
+
+  // Fetch components from Firestore.
+  // - Skips if data is already loaded (pass force=true to bypass).
+  // - Deduplicates concurrent calls so only one network request fires.
+  const fetchComponents = async (force = false): Promise<void> => {
+    if (!force && hasFetched && componentsData.value.length > 0) return;
+    if (fetchPromise) return fetchPromise;
+
+    fetchPromise = (async () => {
+      loading.value = true;
+      error.value = null;
+      try {
+        const querySnapshot = await getDocs(collection(db, "components"));
+        const fetchedData: any[] = [];
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          fetchedData.push({
+            id: docSnap.id,
+            title: data.title || data.name,
+            name: data.name,
+            category: data.category || "Uncategorized",
+            route: data.route,
+            code: data.code,
+            copy_count: data.copy_count || 0,
+            created_at: data.created_at,
+            description: data.description || "",
+            thumbnail: data.thumbnail || null,
+          });
         });
-      });
-      componentsData.value = fetchedData;
-      // console.log("Fetched components:", fetchedData);
-    } catch (err: any) {
-      error.value = err.message;
-      // console.error("Error fetching components:", err);
-    } finally {
-      loading.value = false;
-    }
+        componentsData.value = fetchedData;
+        hasFetched = true;
+      } catch (err: any) {
+        error.value = err.message;
+      } finally {
+        loading.value = false;
+        fetchPromise = null;
+      }
+    })();
+
+    return fetchPromise;
   };
 
   // Return a component by route (string)
